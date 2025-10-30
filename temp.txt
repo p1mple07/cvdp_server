@@ -1,1000 +1,1000 @@
-  997  python3 LogicSynthesisPolicy.py
-  998  python3 gat_conv.py
-  999  pip show torch_geometric
- 1000  python3 gat_conv.py
- 1001  pip install torch_geometric.nn
- 1002  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1003  pip install torch_geometric.nn
- 1004  pip install torch-geometric
- 1005  python3 check.py
- 1006  pip uninstall torch_geometric
- 1007  conda install pyg=2.0.4 pytorch-scatter pytorch-sparse pytorch-cluster pytorch-spline-conv -c pyg
- 1008  python3 check.py
- 1009  python3 gat_conv.py
- 1010  CUDA_VISIBLE_DEVICES=1 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320     --bs 320
- 1011  nvidia-smi
- 1012  nvidia-smi -i 1
- 1013  nvidia-smi -i 0
- 1014  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320     --bs 320
- 1015  grep -rn "AbcInterface" /workspace/ckarfa/ABC-RL/
- 1016  grep -rn --include="*.py" "AbcInterface" /workspace/ckarfa/ABC-RL/
- 1017  pip install abc_py
- 1018  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320     --bs 320
- 1019  cd ..
- 1020  cd /workspace/ckarfa/ABC-RL/tools/abc_py
- 1021  ls -la
- 1022  # You should see CMakeLists.txt, src/, and other abc_py files
- 1023  cd /workspace/ckarfa/ABC-RL
- 1024  make ABC_USE_PIC=1 libabc.a
- 1025  make libabc.a
- 1026  pwd
- 1027  ls -la
- 1028  ls
- 1029  cd tools
- 1030  ls
- 1031  cd abc
- 1032  ls
- 1033  make libabc.a
- 1034  ls -la /workspace/ckarfa/ABC-RL/tools/abc/libabc.a
- 1035  cd /workspace/ckarfa/ABC-RL/tools/abc_py
- 1036  export ABC_DIR=/workspace/ckarfa/ABC-RL/tools/abc
- 1037  mkdir -p build
- 1038  cd build
- 1039  cd ..
- 1040  ls
- 1041  cmake -DABC_DIR=$ABC_DIR ..
- 1042  ls
- 1043  cmake 
- 1044  cmake -DABC_DIR=/workspace/ckarfa/ABC-RL/tools/abc_py
- 1045  conda install -c conda-forge pybind11
- 1046  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1047  cmake -DABC_DIR=/workspace/ckarfa/ABC-RL/tools/abc_py
- 1048  conda install -c conda-forge pybind11
- 1049  cmake -DABC_DIR=/workspace/ckarfa/ABC-RL/tools/abc_py
- 1050  conda install -c conda-forge boost-cpp
- 1051  cmake -DABC_DIR=/workspace/ckarfa/ABC-RL/tools/abc_py
- 1052  cmake --version
- 1053  ls
- 1054  cd build
- 1055  ls
- 1056  cmake
- 1057  cmake ..
- 1058  sudo apt remove cmake -y
- 1059  sudo apt update
- 1060  sudo apt install -y build-essential libssl-dev
- 1061  sudo apt update
- 1062  sudo apt install -y build-essential libssl-dev
- 1063  cd ~
- 1064  wget https://github.com/Kitware/CMake/releases/download/v3.13.2/cmake-3.13.2.tar.gz
- 1065  tar zxvf cmake-3.13.2.tar.gz
- 1066  cd cmake-3.13.2
- 1067  # Bootstrap the build system
- 1068  ./bootstrap
- 1069  # Build (using all available cores)
- 1070  make -j$(nproc)
- 1071  # Install system-wide
- 1072  sudo make install
- 1073  hash -r
- 1074  cmake --version
- 1075  cd ~
- 1076  rm -rf cmake-3.13.2*
- 1077  cd /workspace/ckarfa/ABC-RL/tools/abc_py
- 1078  conda activate abcrl
- 1079  conda install -c conda-forge boost-cpp pybind11
- 1080  export ABC_DIR=/workspace/ckarfa/ABC-RL/tools/abc
- 1081  rm -rf build CMakeCache.txt
- 1082  ls
- 1083  mkdir -p build
- 1084  ls
- 1085  cd build
- 1086  cmake -DABC_DIR=$ABC_DIR ..
- 1087  ls
- 1088  cmake -DPYBIND11_DIR=/workspace/ckarfa/ABC-RL/tools/pybind11
- 1089  cmake -DPYBIND11_DIR="/workspace/ckarfa/ABC-RL/tools/pybind11"
- 1090  ls
- 1091  cd ..
- 1092  ls
- 1093  cd ..
- 1094  ls
- 1095  cmake -DPYBIND11_DIR=/workspace/ckarfa/ABC-RL/tools/pybind11
- 1096  cd pybind11
- 1097  ls
- 1098  cmake
- 1099  cmake -DPYBIND11_DIR=/workspace/ckarfa/ABC-RL/tools/pybind11
- 1100  cd ..
- 1101  python
- 1102  ls
- 1103  cd abc_py
- 1104  ls
- 1105  cd build
- 1106  ls
- 1107  cmake ..
- 1108  cd CMakeFiles/
- 1109  ls
- 1110  cd ..
- 1111  ls
- 1112  cmake ..
- 1113  ./pybind11
- 1114  export PYBIND11_DIR=/workspace/ckarfa/ABC-RL/tools/pybind11
- 1115  cmake -DPYBIND11_DIR=$PYBIND11_DIR ..
- 1116  make -j4
- 1117  clear
- 1118  ls
- 1119  cd ..
- 1120  pip install .
- 1121  pip install abc_py
- 1122  ls
- 1123  cd tools
- 1124  ls
- 1125  cd abc_py
- 1126  ls
- 1127  make
- 1128  cd build
- 1129  ls
- 1130  cmake ..
- 1131  make
- 1132  cd ..
- 1133  pip install abc_py
- 1134  conda remove boost-cpp
- 1135  cd /workspace/ckarfa/ABC-RL/tools/abc_py
- 1136  rm -rf build CMakeCache.txt
- 1137  mkdir -p build && cd build
- 1138  export ABC_DIR=/workspace/ckarfa/ABC-RL/tools/abc
- 1139  cmake -DABC_DIR=$ABC_DIR ..
- 1140  make -j4
- 1141  cd ..
- 1142  pip install .
- 1143  cd ..
- 1144  ls
- 1145  cd IITG_code_clean/
- 1146  ls
- 1147  cd ABC-RL_DAGNN
- 1148  ls
- 1149  cd src
- 1150  ls
- 1151  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320     --bs 320
- 1152  htop
- 1153  sudo apt install htop
- 1154  nvidia-smi
- 1155  sudo nvidia-smi
- 1156  nvidia-smi
- 1157  ls
- 1158  nvidia-smi
- 1159  code
- 1160  ls
- 1161  Akash
- 1162  cd Akash
- 1163  ls
- 1164  cd ..
- 1165  ls
- 1166  cd ABC-RL
- 1167  l
- 1168  ls
- 1169  cd ..
- 1170  cd results/
- 1171  ls
- 1172  cd ..
- 1173  ls /Akash
- 1174  ls Akash/
- 1175  ls Akash/power_model/
- 1176  scp -r -i -P 8027 ckarfa@172.16.112.198
- 1177  scp -r -i -P 8027 ckarfa@172.16.112.198:/home/ckarfa
- 1178  ssh -v ckarfa@172.16.112.198 -p 8027
- 1179  ls
- 1180  jupyter notebook
- 1181  ls
- 1182  ls
- 1183  cd ABC-RL/
- 1184  ls
- 1185  cd IITG_code_clean/
- 1186  ls
- 1187  cd ABC-RL_DAGNN
- 1188  ls
- 1189  cd src
- 1190  ls
- 1191  CUDA_VISIBLE_DEVICES=1 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320     --bs 320
- 1192  conda activate abcrl
- 1193  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320     --bs 320
- 1194  ls
- 1195  nvidia-smi
- 1196  clear
- 1197  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 cd ..
- 1198  ssh -v ckarfa@172.16.112.198 -p 8027
- 1199  ls
- 1200  cd ABC-RL/
- 1201  conda activate abcrl
- 1202  cd IITG_code_clean/ABC-RL_DAGNN/src
- 1203  CUDA_VISIBLE_DEVICES=0 python main.py --ttsplit 103 --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001 --runID 15001 --runs 51 --replay 320 --bs 320
- 1204  CUDA_VISIBLE_DEVICES=0 python main.py --ttsplit 103 --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001 --runID 15001 --runs 51 --replay 320 --bs 32
- 1205  cd ABC-RL/
- 1206  conda activate abcrl
- 1207  cd IITG_code_clean/
- 1208  ls
- 1209  cd ABC-RL_DAGNN/
- 1210  ls
- 1211  cd src
- 1212  ls
- 1213  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 103     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 cd src
- 1214  CUDA_VISIBLE_DEVICES=0 python main.py --ttsplit 103 --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001 --runID 15001 --runs 51 --replay 320 --bs 320
- 1215  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1216  conda activate abcrl
- 1217  cd ABC-RL/IITG_code_clean/
- 1218  ls
- 1219  CD ABC-RL_DAGNN/
- 1220  ls
- 1221  cd ABC-RL_DAGNN/
+  993  g++ compute_k_temp.cpp -o comp
+  994  ./comp
+  995  g++ generate_final_cuts_k.cpp -o gen
+  996  ./gen
+  997  python test01.py 
+  998  g++ finding_criticality.cpp -o find
+  999  ./find
+ 1000  g++ compute_k_temp.cpp -o comp
+ 1001  ./comp
+ 1002  g++ generate_final_cuts_k.cpp -o gen
+ 1003  ./gen
+ 1004  python test01.py 
+ 1005  g++ finding_criticality.cpp -o find
+ 1006  ./find
+ 1007  g++ compute_k_temp.cpp -o comp
+ 1008  ./comp
+ 1009  g++ generate_final_cuts_k.cpp -o gen
+ 1010  ./gen
+ 1011  g++ compute_k_temp.cpp -o comp
+ 1012  ./comp
+ 1013  g++ generate_final_cuts_k.cpp -o gen
+ 1014  ./gen
+ 1015  python test01.py 
+ 1016  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1017  python3 train_neuroschedule.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --epochs 10
+ 1018  source sche/bin/activate
+ 1019  python3 train_neuroschedule.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --epochs 10
+ 1020  mkdir GNN_Book
+ 1021  cd GNN_Book/
+ 1022  touch Graph_directed.py
+ 1023  cat Graph_directed.py 
+ 1024  networkx
+ 1025  pip3 install networkx
+ 1026  python3 Graph_directed.py 
+ 1027  pip3 install matplotlib
+ 1028  python3 Graph_directed.py 
+ 1029  cd Priority-Cuts/Akash/Priority-Cuts-Filter/abc
+ 1030  cd ../data/bar
+ 1031  touch final_cuts_k.csv
+ 1032  cd ../div
+ 1033  touch final_cuts_k.csv
+ 1034  touch final_cuts_k1.csv
+ 1035  touch ../multiplier/final_cuts_k1.csv
+ 1036  touch ../square/final_cuts_k1.csv
+ 1037  touch ../voter/final_cuts_k1.csv
+ 1038  touch ../mem_ctrl/final_cuts_k1.csv
+ 1039  touch ../c6288/final_cuts_k1.csv
+ 1040  touch ../max/final_cuts_k1.csv
+ 1041  g++ finding_criticality.cpp -o find
+ 1042  ./find
+ 1043  g++ finding_criticality.cpp -o find
+ 1044  ./find
+ 1045  g++ compute_k_temp.cpp -o comp
+ 1046  ./comp
+ 1047  g++ generate_final_cuts_k.cpp -o gen
+ 1048  ./gen
+ 1049  g++ generate_final_cuts_k.cpp -o gen
+ 1050  ./gen
+ 1051  cd ../abc
+ 1052  ./abc
+ 1053  make
+ 1054  ./abc
+ 1055  cd ../cut-sol/
+ 1056  g++ finding_criticality.cpp -o find
+ 1057  ./find
+ 1058  g++ compute_k_temp.cpp -o comp
+ 1059  ./comp
+ 1060  g++ generate_final_cuts_k.cpp -o gen
+ 1061  ./gen
+ 1062  g++ finding_criticality.cpp -o find
+ 1063  ./find
+ 1064  g++ compute_k_temp.cpp -o comp
+ 1065  ./comp
+ 1066  g++ generate_final_cuts_k.cpp -o gen
+ 1067  ./gen
+ 1068  g++ finding_criticality.cpp -o find
+ 1069  ./find
+ 1070  g++ compute_k_temp.cpp -o comp
+ 1071  ./comp
+ 1072  g++ generate_final_cuts_k.cpp -o gen
+ 1073  ./gen
+ 1074  g++ finding_criticality.cpp -o find
+ 1075  ./find
+ 1076  g++ compute_k_temp.cpp -o comp
+ 1077  ./comp
+ 1078  g++ generate_final_cuts_k.cpp -o gen
+ 1079  ./gen
+ 1080  g++ finding_criticality.cpp -o find
+ 1081  ./find
+ 1082  g++ compute_k_temp.cpp -o comp
+ 1083  ./comp
+ 1084  g++ generate_final_cuts_k.cpp -o gen
+ 1085  ./gen
+ 1086  g++ finding_criticality.cpp -o find
+ 1087  ./find
+ 1088  g++ compute_k_temp.cpp -o comp
+ 1089  ./comp
+ 1090  g++ generate_final_cuts_k.cpp -o gen
+ 1091  ./gen
+ 1092  g++ finding_criticality.cpp -o find
+ 1093  ./find
+ 1094  g++ compute_k_temp.cpp -o comp
+ 1095  ./comp
+ 1096  g++ generate_final_cuts_k.cpp -o gen
+ 1097  ./gen
+ 1098  g++ finding_criticality.cpp -o find
+ 1099  ./find
+ 1100  g++ compute_k_temp.cpp -o comp
+ 1101  ./comp
+ 1102  g++ generate_final_cuts_k.cpp -o gen
+ 1103  ./gen
+ 1104  g++ finding_criticality.cpp -o find
+ 1105  ./find
+ 1106  g++ compute_k_temp.cpp -o comp
+ 1107  ./comp
+ 1108  g++ generate_final_cuts_k.cpp -o gen
+ 1109  ./gen
+ 1110  g++ finding_criticality.cpp -o find
+ 1111  ./find
+ 1112  g++ compute_k_temp.cpp -o comp
+ 1113  ./comp
+ 1114  g++ generate_final_cuts_k.cpp -o gen
+ 1115  ./gen
+ 1116  g++ compute_k_temp.cpp -o comp
+ 1117  ./comp
+ 1118  g++ generate_final_cuts_k.cpp -o gen
+ 1119  ./gen
+ 1120  g++ compute_k_temp.cpp -o comp
+ 1121  ./comp
+ 1122  g++ generate_final_cuts_k.cpp -o gen
+ 1123  ./gen
+ 1124  g++ finding_criticality.cpp -o find
+ 1125  ./find
+ 1126  g++ compute_k_temp.cpp -o comp
+ 1127  ./comp
+ 1128  g++ generate_final_cuts_k.cpp -o gen
+ 1129  ./gen
+ 1130  g++ finding_criticality.cpp -o find
+ 1131  ./find
+ 1132  g++ compute_k_temp.cpp -o comp
+ 1133  ./comp
+ 1134  g++ generate_final_cuts_k.cpp -o gen
+ 1135  ./gen
+ 1136  g++ compute_k_temp.cpp -o comp
+ 1137  ./comp
+ 1138  g++ generate_final_cuts_k.cpp -o gen
+ 1139  ./gen
+ 1140  g++ finding_criticality.cpp -o find
+ 1141  ./find
+ 1142  g++ compute_k_temp.cpp -o comp
+ 1143  ./comp
+ 1144  g++ generate_final_cuts_k.cpp -o gen
+ 1145  ./gen
+ 1146  g++ finding_criticality.cpp -o find
+ 1147  ./find
+ 1148  g++ compute_k_temp.cpp -o comp
+ 1149  ./comp
+ 1150  g++ generate_final_cuts_k.cpp -o gen
+ 1151  ./gen
+ 1152  g++ finding_criticality.cpp -o find
+ 1153  ./find
+ 1154  g++ compute_k_temp.cpp -o comp
+ 1155  ./comp
+ 1156  g++ generate_final_cuts_k.cpp -o gen
+ 1157  ./gen
+ 1158  g++ finding_criticality.cpp -o find
+ 1159  ./find
+ 1160  g++ compute_k_temp.cpp -o comp
+ 1161  ./comp
+ 1162  g++ generate_final_cuts_k.cpp -o gen
+ 1163  ./gen
+ 1164  g++ finding_criticality.cpp -o find
+ 1165  ./find
+ 1166  g++ compute_k_temp.cpp -o comp
+ 1167  ./comp
+ 1168  g++ generate_final_cuts_k.cpp -o gen
+ 1169  ./gen
+ 1170  g++ finding_criticality.cpp -o find
+ 1171  ./find
+ 1172  g++ compute_k_temp.cpp -o comp
+ 1173  ./comp
+ 1174  g++ generate_final_cuts_k.cpp -o gen
+ 1175  ./gen
+ 1176  g++ finding_criticality.cpp -o find
+ 1177  ./find
+ 1178  g++ compute_k_temp.cpp -o comp
+ 1179  ./comp
+ 1180  g++ generate_final_cuts_k.cpp -o gen
+ 1181  ./gen
+ 1182  cd Priority-Cuts/Akash/Priority-Cuts-Filter/abc
+ 1183  ./abc
+ 1184  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1185  conda activate abcrl
+ 1186  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/div.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test01 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt 
+ 1187  cd ABC-RL/IITG_code_clean/ABC-RL_DAGNN/src/
+ 1188  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/div.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test01 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt 
+ 1189  conda deactivate
+ 1190  conda activate abc-rl
+ 1191  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/div.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test01 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt 
+ 1192  conda deactivate
+ 1193  conda activate abcrl
+ 1194  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/div.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test01 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt 
+ 1195  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/div.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test01 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt --runID 15002
+ 1196  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/mem_ctrl.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test02 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt --runID 15002
+ 1197  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/arbiter.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test02 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt --runID 15002
+ 1198  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/c3540.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test02 --budget 20 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
+ 1199  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/arbiter.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test03 --budget 20 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
+ 1200  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/c5315.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test04 --budget 20 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
+ 1201  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/adder.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test05 --budget 20 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
+ 1202  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/multiplier.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test06 --budget 20 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
+ 1203  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/square.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test07 --budget 50 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
+ 1204  conda activate abcrl
+ 1205  cd ABC-RL/IITG_code_clean/ABC-RL_DAGNN/src
+ 1206  CUDA_VISIBLE_DEVICES=0 python evaluate.py     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_08   --runID 15001 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --budget 50 --benchmark $HOME/ABC-RL/arithmetic/adder.aig  
+ 1207  df
+ 1208  conda env list
+ 1209  conda create -n soum1 python=3.10
+ 1210  uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+ 1211  ls
+ 1212  cd siang_btp/
+ 1213  ls
+ 1214  cd slm_api/
+ 1215  cd
+ 1216  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1217  ls
+ 1218  cd siang_btp/
+ 1219  ls
+ 1220  clear
+ 1221  cd slm_api/
  1222  ls
- 1223  cd src
+ 1223  history
  1224  ls
- 1225  CUDA_VISIBLE_DEVICES=0 python main.py --ttsplit 103 --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001 --runID 15001 --runs 51 --replay 320 --bs 320
- 1226  ls
- 1227  conda activate abcrl
- 1228  ls
- 1229  ./abc
- 1230  cd ABL-RL
- 1231  ls
- 1232  cd ABC-RL
- 1233  ls
- 1234  cd IITG_code_clean/
- 1235  ls
- 1236  cd ARB-RL_DAGNN
- 1237  cd ABC-RL_DAGNN
- 1238  ls
- 1239  cd src
- 1240  ls
- 1241  ./abc
- 1242  ls
- 1243  cd ..
- 1244  ls
- 1245  cd ..
- 1246  ls
- 1247  cd ABC-RL_DAGNN/
- 1248  ls
- 1249  cd src
- 1250  ls
- 1251  cd ..
- 1252  ls
- 1253  cd tools
+ 1225  histoy > temp.txt
+ 1226  history>temp.txt
+ 1227  ls
+ 1228  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1229  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1230  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate
+ 1231  clear
+ 1232  uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+ 1233  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1234  uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+ 1235  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1236  clear
+ 1237  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1238  clear
+ 1239  python main.py 
+ 1240  clear
+ 1241  python main.py
+ 1242  clear
+ 1243  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1244  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1245  clera
+ 1246  clear
+ 1247  history
+ 1248  clera
+ 1249  clear
+ 1250  history
+ 1251  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1252  clear
+ 1253  uvicorn main:app --host 0.0.0.0 --port 8000
  1254  ls
- 1255  cd abc
- 1256  ./abc
- 1257  ls
- 1258  cd ..
- 1259  ./abc
- 1260  abc
- 1261  cd abc
- 1262  ls
- 1263  cd src
+ 1255  cd siang_btp/
+ 1256  ls
+ 1257  cd cvdp_benchmark/
+ 1258  ls
+ 1259  cat .env
+ 1260  exit
+ 1261  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1262  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1263  clear
  1264  ls
- 1265  cd ..
+ 1265  cd siang_btp/
  1266  ls
- 1267  make
+ 1267  cd slm_api/
  1268  ls
- 1269  ./abc
- 1270  ls
- 1271  cd lib
- 1272  ls
- 1273  cd ..
- 1274  ls
- 1275  ./abc
- 1276  grep -R "45nm"
- 1277  grep -R "7nm"
- 1278  cd ..
- 1279  grep -R "45nm"
- 1280  ls
- 1281  find . -type f -name "*45nm*"
- 1282  ls
- 1283  cd ABC-RL/
- 1284  ls
- 1285  cd IITG_code_clean/Q
- 1286  cd IITG_code_clean/
- 1287  ls
- 1288  cd ABC-RL_ICLR
- 1289  ls
- 1290  cd src
- 1291  ls
- 1292  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 \
- 1293  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_ICLR/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 --bs 320
- 1294  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 15     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_ICLR/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 --bs 320
- 1295  cd ..
- 1296  cd ABC-RL_DAGNN/
- 1297  ls
- 1298  cd stc
- 1299  cd src
- 1300  ls
- 1301  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 --bs 320
- 1302  cd ..
- 1303  ls
- 1304  cd tools
- 1305  cd abc
- 1306  ls
- 1307  ./abc
- 1308  cd ABC-RL_DAGNN/
- 1309  cd ABC-RL/IITG_code_clean/
- 1310  cd ABC-RL_DAGNN/
- 1311  conda activate abcrl
- 1312  CUDA_VISIBLE_DEVICES=0 python main.py --ttsplit 103 --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001 --runID 15001 --runs 21 --replay 320 --bs 320
- 1313  cd src
- 1314  CUDA_VISIBLE_DEVICES=0 python main.py --ttsplit 103 --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001 --runID 15001 --runs 21 --replay 320 --bs 320
- 1315  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1316  ls
- 1317  cd ABC-RL
- 1318  ls
- 1319  cd IITG_code_clean/
- 1320  ls
+ 1269  cd..
+ 1270  exit
+ 1271  clear
+ 1272  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1273  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1274  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1275  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1276  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1277  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1278  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1279  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1280  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1281  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1282  clear
+ 1283  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1284  git init
+ 1285  git status
+ 1286  git add .
+ 1287  git commit -m"this was working"
+ 1288  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1289  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1290  mkdir Bhabesh
+ 1291  cd Bhabesh
+ 1292  touch graph_generatot.py
+ 1293  python3 graph_generatot.py 
+ 1294  touch data_vis_1.py
+ 1295  python3 data_vis_1.py 
+ 1296  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1297  clear
+ 1298  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1299  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1300  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1301  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1302  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1303  clear
+ 1304  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1305  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1306  clear
+ 1307  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1308  ls
+ 1309  cd s
+ 1310  cd siang_btp/
+ 1311  ls
+ 1312  cd cvdp_benchmark/
+ 1313  ls
+ 1314  cat phi_req.txt 
+ 1315  exit
+ 1316  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1317  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1318  clear
+ 1319  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1320  uvicorn main:app --host 0.0.0.0 --port 8000
  1321  clear
- 1322  conda activate abcrl
- 1323  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 \
- 1324  ls
- 1325  cd ABC_RL
- 1326  ls
- 1327  cd stc
- 1328  cd src
- 1329  ls
- 1330  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 107     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 --bs 320
- 1331  ls
- 1332  python replay_memory.py
- 1333  ls
- 1334  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 107     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 1     --replay 10 --bs 10
- 1335  cd /ABC-RL/IITG_code_clean/ABC-RL_DAGNN/src
- 1336  cd ABC-RL/IITG_code_clean/ABC-RL_DAGNN/src
- 1337  conda activate abcrl
- 1338  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 107     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/
- 1339  CUDA_VISIBLE_DEVICES=0 python main.py --ttsplit 103 --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001 --runID 15001 --runs 10 --replay 10 --bs 10
- 1340  print(value_losses)
- 1341  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 107     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 50     --replay 320 --bs 320
+ 1322  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1323  clear
+ 1324  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1325  curl -X POST "http://localhost:8000/test" | jq .
+ 1326  curl -X GET "http://localhost:8000/model_info" | jq .
+ 1327  pkill -f uvicorn
+ 1328  source flask_venv/bin/activate && python main.py
+ 1329  sleep 5 && curl -X GET "http://localhost:8000/" | jq .
+ 1330  python main.py
+ 1331  /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/python main.py
+ 1332  sleep 10 && curl -X GET "http://localhost:8000/" | jq .
+ 1333  /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/python main.py
+ 1334  sleep 30 && curl -X GET "http://localhost:8000/" | jq .
+ 1335  /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/python main.py
+ 1336  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1337  source flask_venv/bin/activate
+ 1338  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1339  pkill -f "python main.py"
+ 1340  /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/python main.py
+ 1341  watch nvidia-smi
  1342  ls
- 1343  conda activate abcrl
- 1344  ls
- 1345  cd ABC-RL
- 1346  ls
- 1347  cd IITG_code_clean/
- 1348  ls
- 1349  cd ABC-RL_DAGNN
- 1350  ls
- 1351  cd src
- 1352  ls
- 1353  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 107     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15002     --runID 15002     --runs 50     --replay 320 --bs 320
- 1354  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 107     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15002     --runID 15002     --runs 50     --replay 10 --bs 10
- 1355  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1356  cd ABC-RL/IITG_code_clean/ABC-RL_DAGNN/src
- 1357  conda activate abcrl
- 1358  CUDA_VISIBLE_DEVICES=0 python main.py --ttsplit 107 --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/NETV01 --runID 15001 --runs 5 --replay 10 --bs 10
- 1359  ./abc
- 1360  cd ../data/test
- 1361  touch nodes.csv
- 1362  touch cuts.csv
- 1363  cd ../../abc
- 1364  ./abc
- 1365  cd ../data/test
- 1366  touch cut_delays.csv
- 1367  touch node_stats_for_k.csv
- 1368  touch final_cuts_10.csv
- 1369  cd ../../cut-sol/
- 1370  g++ finding_criticality.cpp
- 1371  g++ finding_criticality.cpp -o find
- 1372  ./find
- 1373  g++ finding_criticality.cpp -o find
- 1374  ./find
- 1375  g++ compute_k_temp.cpp -o comp
- 1376  ./comp
- 1377  g++ generate_final_cuts_k.cpp -o gen
- 1378  ./gen
- 1379  python test01.py
- 1380  g++ compute_k_temp.cpp -o comp
- 1381  ./comp
- 1382  g++ generate_final_cuts_k.cpp -o gen
- 1383  ./gen
- 1384  python test01.py
- 1385  g++ finding_criticality.cpp -o find
- 1386  ./find
- 1387  g++ compute_k_temp.cpp -o comp
- 1388  ./comp
- 1389  g++ generate_final_cuts_k.cpp -o gen
- 1390  ./gen
- 1391  python test01.py
- 1392  g++ finding_criticality.cpp -o find
- 1393  ./find
- 1394  g++ compute_k_temp.cpp -o comp
- 1395  ./comp
- 1396  g++ generate_final_cuts_k.cpp -o gen
- 1397  ./gen
- 1398  python test01.py
- 1399  g++ finding_criticality.cpp -o find
- 1400  ./find
- 1401  g++ compute_k_temp.cpp -o comp
- 1402  ./comp
- 1403  g++ generate_final_cuts_k.cpp -o gen
- 1404  ./gen
- 1405  python test01.py
- 1406  g++ finding_criticality.cpp -o find
- 1407  ./find
- 1408  g++ compute_k_temp.cpp -o comp
- 1409  ./comp
- 1410  g++ generate_final_cuts_k.cpp -o gen
- 1411  ./gen
- 1412  python test01.py
- 1413  ls
- 1414  cd ABC-RL
- 1415  ls
- 1416  cd IITG_code_clean/
- 1417  ls
- 1418  cd ABC-RL-DAGNN
- 1419  ls
- 1420  cd ABC-RL_DAGNN/
- 1421  ls
- 1422  cd src
- 1423  ls
- 1424  cd ..
- 1425  ls
- 1426  cd ..
- 1427  ls
- 1428  cd tools
- 1429  ls
- 1430  cd abc
- 1431  make
- 1432  abc
- 1433  ls
- 1434  ./abc
- 1435  cd ..
- 1436  ls
- 1437  cd IITG_code_clean/
- 1438  ls
- 1439  cd ABC-RL_DAGNN/
- 1440  ls
- 1441  cd src
+ 1343  exit
+ 1344  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1345  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1346  exitsource /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1347  /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/python main.py
+ 1348  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1349  source flask_venv/bin/activate
+ 1350  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1351  source sche/bin/activate
+ 1352  python3 data_vis_1.py 
+ 1353  pip3 install pandas
+ 1354  python3 data_vis_1.py 
+ 1355  pip3 install graphviz
+ 1356  python3 data_vis_1.py 
+ 1357  ls
+ 1358  cd siang_btp/
+ 1359  ls
+ 1360  cd slm_api/
+ 1361  exit
+ 1362  uvicorn main:app --host 0.0.0.0 --port 8001
+ 1363  source flask_venv/bin/activate
+ 1364  uvicorn main:app --host 0.0.0.0 --port 8001
+ 1365  nvidia-smi --query-gpu=memory.used,memory.free,memory.total --format=csv,noheader,nounits
+ 1366  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1367  lsof -i :8000
+ 1368  source flask_venv/bin/activate
+ 1369  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1370  source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1371  ps aux | grep uvicorn
+ 1372  kill 1858400 1964308
+ 1373  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1374  source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1375  pkill -f uvicorn
+ 1376  source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1377  uvicorn main:app --host 0.0.0.0 --port 8002
+ 1378  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1379  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1380  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1381  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1382  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1383  clear
+ 1384  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1385  clear
+ 1386  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1387  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1388  git status
+ 1389  git add .
+ 1390  git status
+ 1391  git commit -m"phi chal raha tha shyd"
+ 1392  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1393  watch -n 2 nvidia-smi
+ 1394  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1395  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1396  cd ..
+ 1397  cd siang_btp/
+ 1398  ls
+ 1399  cd cvdp_benchmark/
+ 1400  ls
+ 1401  cat deepseek.txt 
+ 1402  ls
+ 1403  cd slm_test/
+ 1404  ls
+ 1405  cat deepseek_model.py 
+ 1406  cd ..
+ 1407  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1408  cd cvdp_benchmark/
+ 1409  ls
+ 1410  cat deepseek.txt 
+ 1411  cd /workspace/ckarfa/siang_btp/slm_api
+ 1412  source flask_venv/bin/activate
+ 1413  pip install -r requirements.txt
+ 1414  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1415  uvicorn main:app --host 0.0.0.0 --port 8001
+ 1416  source flask_venv/bin/activate && echo "Venv activated" && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1417  fuser -k 8000/tcp
+ 1418  source flask_venv/bin/activate && echo "Venv activated" && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1419  source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8002
+ 1420  ps aux | grep 8000
+ 1421  kill -9 1858400 1964308
+ 1422  ps aux | grep 8000
+ 1423  uvicorn main:app --host 0.0.0.0 --port 8002
+ 1424  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1425  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1426  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1427  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1428  source sche/bin/activate
+ 1429  python3 data_vis_1.py 
+ 1430  nano graph_generator_new.py
+ 1431  python3 graph_generator_priority_height.py 
+ 1432  python3 data_vis_2.py 
+ 1433  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1434  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate
+ 1435  pip list | grep -E "(transformers|torch|tokenizers|accelerate)"
+ 1436  python test_smollm.py
+ 1437  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1438  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1439  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1440  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1441  cd ..
  1442  ls
- 1443  C
- 1444  g++ finding_criticality.cpp -o find
- 1445  ./find
- 1446  cd ../abc
- 1447  ./abc
- 1448  git clone https://github.com/p1mple07/cvdp_benchmark.git
- 1449  cd cvdp_benchmark/
- 1450  diff run_benchmark.py test_run.py 
- 1451  clear
- 1452  python3 -m venv cvdp_env
- 1453  source cvdp_env/bin/activate
- 1454  ls
- 1455  clear
- 1456  pip install requirements_nemotron.txt 
- 1457  pip install --upgrade pipp
- 1458  pip install --upgrade pip
- 1459  source cvdp_env/bin/activate && pip install -r requirements.txt && python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m gpt-oss -c slm_test/smollm_factory.py -p work_oss_fixed
- 1460  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1461  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1462  watch -n 1 nvidia-smi
- 1463  source cvdp_env/bin/activate && python run_benchmark.py -f full_dataset/cvdp_v1.0.2_nonagentic_code_comprehension.jsonl -l -m phi3-mini -c slm_test/smollm_factory.py -p work_phi35_full_dataset
- 1464  pip freeze > phi_req.txt
- 1465  g++ finding_criticality.cpp -o find
- 1466  ./find
- 1467  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1468  source cvdp_env/bin/activate
- 1469  pip install -r requirements.txt
- 1470  pip install -r requirements_nemotron.txt
- 1471  python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m gpt-oss -c slm_test/smollm_factory.py -p work_oss_fixed
- 1472  source cvdp_env/bin/activate
- 1473  pip install -r requirements.txt
- 1474  pip install -r requirements_nemotron.txt
- 1475  python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m gpt-oss -c slm_test/smollm_factory.py -p work_oss_fixed
- 1476  source cvdp_env/bin/activate && pip install -r requirements.txt
- 1477  source cvdp_env/bin/activate && pip install -r requirements_nemotron.txt
- 1478  source cvdp_env/bin/activate && python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m gpt-oss -c slm_test/smollm_factory.py -p work_oss_fixed
- 1479  source cvdp_env/bin/activate && pip install transformers torch accelerate
- 1480  source cvdp_env/bin/activate && python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m gpt-oss -c slm_test/smollm_factory.py -p work_oss_fixed
- 1481  source cvdp_env/bin/activate && export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True && python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m gpt-oss -c slm_test/smollm_factory.py -p work_oss_fixed
- 1482  ps -p 2341490 -o pid,ppid,cmd,user,%mem --no-headers
- 1483  nvidia-smi
- 1484  ps aux | grep python | grep -v grep
- 1485  source cvdp_env/bin/activate && python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m phi3-mini -c slm_test/smollm_factory.py -p work_phi_fixed
- 1486  source cvdp_env/bin/activate && pip show transformers
- 1487  source cvdp_env/bin/activate && pip install transformers==4.38.0
- 1488  source cvdp_env/bin/activate && pip install transformers==4.44.0
- 1489  source cvdp_env/bin/activate && python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m phi3-mini -c slm_test/smollm_factory.py -p work_phi35_fixed
- 1490  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1491  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1492  pip install -U transformers kernels torch
- 1493  python slm_test/oss_test.py 
- 1494  python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m gpt-oss -c slm_test/smollm_factory.py -p work_oss_fixed
- 1495  source cvdp_env/bin/activate
- 1496  python run_benchmark.py -f full_dataset/cvdp_v1.0.2_nonagentic_code_comprehension.jsonl -l -m gpt-oss -c slm_test/smollm_factory.py -p work_gptoss_full
- 1497  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1498  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1499  watch -n 1 nvidia-smi
- 1500  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1501  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1502  clear
- 1503  ls
- 1504  mkdir siang_btp
- 1505  ls
- 1506  cd siang_btp/
+ 1443  cd cvdp_benchmark/
+ 1444  ls
+ 1445  cd ..
+ 1446  cd slm_api/
+ 1447  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1448  conda activate soum1_3_10
+ 1449  python -m nvitop
+ 1450  conda activate soum1_3_10
+ 1451  lynx https://agnigarh.iitg.ac.in:1442/login
+ 1452  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1453  chmod 777 underDevelopment.sh 
+ 1454  ./underDevelopment.sh 
+ 1455  conda activate soum1_3_10
+ 1456  conda env list
+ 1457  conda create -n soum1_3_10 python=3.10
+ 1458  conda activate soum1_3_10
+ 1459  clear
+ 1460  pip install nvitop
+ 1461  python -m nvitop
+ 1462  pip install torch==2.4.1 torchvision==0.19.1 torchaudio==2.4.1 --index-url https://download.pytorch.org/whl/cu121
+ 1463  pip install --upgrade transformers==4.44.0 peft==0.12.0 accelerate==0.30.1 deepspeed==0.15.1 safetensors==0.4.4 tokenizers==0.19.1 bitsandbytes datasets mlflow wandb pycocotools jupyter pandarallel opencv-python lxml bertviz evaluate s3fs nltk
+ 1464  pip install --upgrade transformers==4.44.0 peft==0.12.0 accelerate==0.30.1 safetensors==0.4.4 tokenizers==0.19.1 bitsandbytes datasets mlflow wandb pycocotools jupyter pandarallel opencv-python lxml bertviz evaluate s3fs nltk
+ 1465  pip install transformers==4.44.0
+ 1466  pip install pytorch-geometric
+ 1467  pip install torch-geometric
+ 1468  python model/demo.py 
+ 1469  huggingface-cli login
+ 1470  python model/demo.py 
+ 1471  conda activate soum1_3_10
+ 1472  conda activate abc-rl
+ 1473  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1474  python automate_bulkSynthesis.py --home $HOME
+ 1475  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1476  python automate_bulkSynthesis.py --home $HOME
+ 1477  for script in *_adder.sh *_multiplier.sh *_max.sh *_square.sh *_sqrt.sh *_mem_ctrl.sh *_router.sh *_voter.sh; do chmod +x "$script"; ./"$script"; done
+ 1478  watch nvidia-smi
+ 1479  conda activate abc-rl
+ 1480  for script in *_multiplier.sh *_max.sh *_square.sh *_sqrt.sh *_mem_ctrl.sh *_router.sh *_voter.sh; do chmod +x "$script"; ./"$script"; done
+ 1481  for script in *_adder.sh *_multiplier.sh *_max.sh *_square.sh *_sqrt.sh *_mem_ctrl.sh *_router.sh *_voter.sh; do chmod +x "$script"; ./"$script"; done
+ 1482  conda activate abc-rl
+ 1483  python automate_bulkSynthesis.py --home $HOME
+ 1484  ls
+ 1485  cd ABC-RL
+ 1486  ls
+ 1487  cd IITG_code_clean/
+ 1488  LS
+ 1489  ls
+ 1490  cd ABC-RL_DAGNN/
+ 1491  ls
+ 1492  cd src
+ 1493  ls
+ 1494  code .
+ 1495  cd .
+ 1496  cd
+ 1497  ls
+ 1498  lynx login 
+ 1499  lynx agnigarh
+ 1500  cd Auth
+ 1501  ls
+ 1502  cat auth.py
+ 1503  python3 auth.py
+ 1504  cd ..
+ 1505  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1506  activate abcrl
  1507  ls
- 1508  clea
- 1509  rclear
- 1510  claewr
- 1511  clae
- 1512  rclear
- 1513  cle4ar
- 1514  clear
- 1515  cd .
- 1516  cd
- 1517  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1518  clear
- 1519  ls
- 1520  cd siang_btp/
- 1521  ls
- 1522  cd cvdp_benchmark/
- 1523  ls
- 1524  cd ..
- 1525  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1526  nvidia-smi
- 1527  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1528  nvidia -smi
- 1529  nvidia-smi
- 1530  mkdir Bhabesh
- 1531  cd Bhabesh/
- 1532  pip3 install virtualenv
- 1533  virtualenv sche
- 1534  source sche/bin/activate
- 1535  pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu126
- 1536  pip3 install torch-geometric
- 1537  pwd
- 1538  ls
- 1539  text-editor train_neuroschedule.py 
- 1540  python3 train_neuroschedule.py --adj adj_t_all.pkl --x node_emb_all.pkl --y node_priority_all.pkl --epochs 10
- 1541  pip3 install scipy
- 1542  python3 train_neuroschedule.py --adj adj_t_all.pkl --x node_emb_all.pkl --y node_priority_all.pkl --epochs 10
- 1543  pip install --upgrade "scipy>=1.8"
- 1544  pip3 install --upgrade "scipy>=1.8"
- 1545  python3 train_neuroschedule.py --adj adj_t_all.pkl --x node_emb_all.pkl --y node_priority_all.pkl --epochs 10
- 1546  cd Bhabesh/
- 1547  ls
- 1548  python3 train_neuroschedule.py --adj adj_t_all.pkl --x node_emb_all.pkl --y node_priority_all.pkl --epochs 10
- 1549  source sche/bin/activate
- 1550  python3 train_neuroschedule.py --adj adj_t_all.pkl --x node_emb_all.pkl --y node_priority_all.pkl --epochs 10
- 1551  pip3 install --upgrade "scipy>=1.8"
- 1552  deactivate
- 1553  virtualenv temp
- 1554  source temp/bin/activate
- 1555  nano convert_adj_pickle_to_edgelist.py
- 1556  ls
- 1557  nano file.txt
- 1558  touch
- 1559  touch convert_adj_pickle_to_edgelist.py
- 1560  python3 convert_adj_pickle_to_edgelist.py   --in adj_t_all.pkl   --out adj_t_all_edgelist.pkl
- 1561  pip3 install "numpy==1.23.5" "scipy==1.10.1"
- 1562  pip3 install numpy==1.23.5
- 1563  lynx
- 1564  ls
- 1565  cd /workspace/ckarfa/siang_btp/cvdp_benchmark && source cvdp_env/bin/activate && python run_benchmark.py -f full_dataset/cvdp_v1.0.2_nonagentic_code_comprehension.jsonl -l -m deepseek-r1 -c slm_test/smollm_factory.py -p work_deepseek_full
- 1566  pip freeze > deepseek.txt
- 1567  cd /workspace/ckarfa/siang_btp/cvdp_benchmark && source cvdp_env/bin/activate
- 1568  cd /workspace/ckarfa/siang_btp/cvdp_benchmark/slm_test && source ../cvdp_env/bin/activate && python -c "from qwq_model import QwQModel; print('QwQ model imported successfully')"
- 1569  cd /workspace/ckarfa/siang_btp/cvdp_benchmark/slm_test && source ../cvdp_env/bin/activate && python -c "
- 1570  from smollm_factory import CustomModelFactory
- 1571  factory = CustomModelFactory()
- 1572  print('Available models:', [m for m in factory.get_available_models() if 'qw' in m.lower()])
- 1573  print('QwQ supported:', factory.is_model_supported('qwq-32b'))
- 1574  "
- 1575  cd /workspace/ckarfa/siang_btp/cvdp_benchmark/slm_test && source ../cvdp_env/bin/activate && python test_qwq.py
- 1576  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1577  watch -n 1 nvidia-smi
- 1578  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate && echo "Virtual environment activated"
- 1579  cd /workspace/ckarfa/siang_btp/cvdp_benchmark/slm_test && source ../cvdp_env/bin/activate && python -c "from deepseek_model import DeepSeekModel; print('DeepSeek model imported successfully')"
- 1580  cd /workspace/ckarfa/siang_btp/cvdp_benchmark/slm_test && source ../cvdp_env/bin/activate && python -c "
- 1581  from smollm_factory import CustomModelFactory
- 1582  factory = CustomModelFactory()
- 1583  print('Available models:', factory.get_available_models())
- 1584  print('DeepSeek supported:', factory.is_model_supported('deepseek-r1'))
- 1585  "
- 1586  cd /workspace/ckarfa/siang_btp/cvdp_benchmark/slm_test && source ../cvdp_env/bin/activate && python test_deepseek.py
- 1587  cd /workspace/ckarfa/siang_btp/cvdp_benchmark && source cvdp_env/bin/activate && pip list | grep -E "(torch|transformers)"
- 1588  python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m deepseek-r1 -c slm_test/smollm_factory.py -p work_deepseek
- 1589  python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m qwq-32b -c slm_test/smollm_factory.py -p work_qwq
- 1590  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1591  clear
- 1592  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1593  python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m qwq-32b -c slm_test/smollm_factory.py -p work_qwq
- 1594  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1595  python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m qwq-32b -c slm_test/smollm_factory.py -p work_qwq
- 1596  cd Bhabesh/
- 1597  source temp/bin/activate
- 1598  pip3 install numpy==1.23.5
- 1599  pip3 install matplotlib
- 1600  ls
- 1601  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1602  source temp/bin/activate
- 1603  pip3 install matplotlib
- 1604  lynx
- 1605  nvidia-smi
- 1606  curl -v https://pypi.org/simple/ 2>&1 | sed -n '1,20p'
- 1607  openssl s_client -connect pypi.org:443 -servername pypi.org </dev/null 2>/dev/null   | openssl x509 -noout -subject -issuer -dates -ext subjectAltName
- 1608  date
- 1609  pip3 config list -v
- 1610  env | grep -E 'PIP_|HTTPS?_PROXY|REQUESTS_CA_BUNDLE'
- 1611  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1612  source temp/bin/activate
- 1613  pip3 install "numpy==1.23.5" "scipy==1.10.1"
- 1614  python convert_adj_pickle_to_edgelist.py   --in adj_t_all.pkl \
- 1615  python3 convert_adj_pickle_to_edgelist.py --in adj_t_all.pkl --out ad_t_all_edgelist.pkl
- 1616  deactivate
- 1617  source sche/bin/activate
- 1618  python3 train_neuroschedule.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --epochs 10
+ 1508  cd ABC-RL
+ 1509  ls
+ 1510  cd IITG_code_clean/
+ 1511  ls
+ 1512  cd ABC-RL_dAGNN
+ 1513  cd ABC-RL_DAGNN
+ 1514  ls
+ 1515  cd src
+ 1516  ls
+ 1517  conda activate abcrl
+ 1518  ls
+ 1519  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 \
+ 1520  CUDA_VISIBLE_DEVICES=0 python main.py     --ttsplit 5001     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51     --replay 320 \
+ 1521  python main.py     --ttsplit 15     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_TTSPLIT5001_replayMem_320_BS320_run15001     --runID 15001     --runs 51
+ 1522  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1523  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate
+ 1524  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1525  source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1526  pkill -f "uvicorn main:app"
+ 1527  source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1528  curl -s http://localhost:8000/health
+ 1529  curl -X POST http://localhost:8000/generate -H "Content-Type: application/json" -d '{"prompt": "Hello, how are you?", "model": "gptoss", "max_length": 100}'
+ 1530  source flask_venv/bin/activate && nohup uvicorn main:app --host 0.0.0.0 --port 8000 > server.log 2>&1 &
+ 1531  tail -n 20 server.log
+ 1532  curl -X POST http://localhost:8000/generate -H "Content-Type: application/json" -d '{"prompt": "Hello, how are you?", "model": "gptoss", "max_length": 100}'
+ 1533  pkill -f "uvicorn main:app"
+ 1534  nohup uvicorn main:app --host 0.0.0.0 --port 8000 > server.log 2>&1 &
+ 1535  curl -X POST http://localhost:8000/generate -H "Content-Type: application/json" -d '{"prompt": "Hello, how are you?", "model": "gptoss", "max_length": 100}'
+ 1536  tail -f server.log
+ 1537  source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1538  python test_gptoss.py
+ 1539  curl -s http://localhost:8000/health | python -m json.tool
+ 1540  source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1541  pkill -f uvicorn
+ 1542  pkill -f "main:app"
+ 1543  ps aux | grep uvicorn
+ 1544  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1545  ip addr show | grep inet
+ 1546  netstat -tlnp | grep 8000
+ 1547  ss -tlnp | grep 8000
+ 1548  source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000 &
+ 1549  sudo ufw status
+ 1550  sudo iptables -L INPUT
+ 1551  pkill -f uvicorn
+ 1552  uvicorn main:app --host 0.0.0.0 --port 8000 &
+ 1553  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1554  curl -X POST http://localhost:8000/generate -H "Content-Type: application/json" -d '{"prompt": "Hello, how are you?", "model": "gptoss", "max_length": 100}'
+ 1555  curl -s http://localhost:8000/health
+ 1556  hostname -I
+ 1557  netstat -tlnp | grep :8000
+ 1558  curl -s http://localhost:8000/health
+ 1559  ss -tlnp | grep :8000
+ 1560  ip addr show | grep inet
+ 1561  curl -s http://localhost:8000/health
+ 1562  sleep 10 && ss -tlnp | grep 8000
+ 1563  curl -s http://localhost:8000/health
+ 1564  curl -s http://10.0.0.5:8000/health
+ 1565  ps aux | grep uvicorn
+ 1566  timeout 10 curl -v http://10.0.0.5:8000/health
+ 1567  sudo ufw allow 8000
+ 1568  ls
+ 1569  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1570  cd OpenABC_DATA/bench/
+ 1571  cond acativate abc-rl
+ 1572  conda activate abc-rl
+ 1573  for script in *_adder.sh *_multiplier.sh *_max.sh *_square.sh *_sqrt.sh *_mem_ctrl.sh *_router.sh *_voter.sh; do chmod +x "$script"; ./"$script"; done
+ 1574  conda actiavte abc-rl
+ 1575  conda activate abc-rl
+ 1576  cd OpenABC_DATA/graphml/
+ 1577  ./adder_GMLGeneration.sh 
+ 1578  ./max_GMLGeneration.sh 
+ 1579  chmod +x max_GMLGeneration.sh 
+ 1580  ./max_GMLGeneration.sh 
+ 1581  cd OpenABC/datagen_copy/automation/
+ 1582  conda activate abc-rl
+ 1583  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1584  python automate_bulkSynthesis.py --home $HOME
+ 1585  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1586  python automate_bulkSynthesis.py --home $HOME
+ 1587  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1588  python automate_bulkSynthesis.py --home $HOME
+ 1589  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1590  python automate_bulkSynthesis.py --home $HOME
+ 1591  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1592  python automate_bulkSynthesis.py --home $HOME
+ 1593  python automate_synbench2Graphml.py --home $HOME
+ 1594  cd ../../datagen/automation/
+ 1595  python automate_synbench2Graphml.py --home $HOME
+ 1596  cd ../../datagen_copy/automation/
+ 1597  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1598  python automate_bulkSynthesis.py --home $HOME
+ 1599  python automate_synbench2Graphml.py --home $HOME
+ 1600  cd ../../datagen/automation/
+ 1601  cd ../../datagen_copy/automation/
+ 1602  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1603  python automate_bulkSynthesis.py --home $HOME
+ 1604  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1605  python automate_bulkSynthesis.py --home $HOME
+ 1606  cd OpenABC_DATA/bench/
+ 1607  conda activate abc-rl
+ 1608  for script in *_adder.sh *_multiplier.sh *_max.sh *_square.sh *_sqrt.sh *_mem_ctrl.sh *_router.sh *_voter.sh; do chmod +x "$script"; ./"$script"; done
+ 1609  cd ../graphml/
+ 1610  for script in adder_* multiplier_* max_* square_* sqrt_* mem_ctrl_* router_* voter_*; do chmod +x "$script"; ./"$script"; done
+ 1611  cd ../bench
+ 1612  ./synthesisBulk_adder.sh 
+ 1613  yosys-abc -f /workspace/ckarfa/OpenABC_DATA/synScripts/adder/abc0.script > /workspace/ckarfa/OpenABC_DATA/bench/adder/log_adder/log_adder_syn0.log
+ 1614  zip -q -j -r /workspace/ckarfa/OpenABC_DATA/bench/adder/syn0.zip /workspace/ckarfa/OpenABC_DATA/bench/adder/syn0/
+ 1615  ./synthesisBulk_adder.sh 
+ 1616  nvidia-smi
+ 1617  ls
+ 1618  cd S
  1619  ls
- 1620  touch visualize_graph.py
- 1621  pip3 install matplotlib
- 1622  python3 visualize_graph.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --summary --stats_csv dataset_stats.csv
- 1623  python3 visualize_graph.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --graph_idx 1 --layout kamada_kawai --save graph1.png
- 1624  touch find_graph.py
- 1625  python3 find_graph.py 
- 1626  python3 visualize_graph.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --summary --stats_csv dataset_stats.csv
- 1627  python3 visualize_graph.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --graph_idx 1 --layout kamada_kawai --save graph1.png
- 1628  python3 visualize_graph.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --graph_idx 1 --layout spring --max_labels 30 --save graph1.png
- 1629  python3 visualize_graph.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --graph_idx 1 --layout spring --max_labels 5 --save graph1.png
- 1630  python3 visualize_graph.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --graph_idx 1 --layout spring --max_labels 0 --save graph1.png
- 1631  python3 visualize_graph.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --graph_idx 6 --layout spring --max_labels 0 --save graph1.png
- 1632  python3 visualize_graph.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --graph_idx 6 --layout spring --max_labels 30 --save graph1.png
- 1633  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1634  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1635  python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m semikong-8b -c slm_test/smollm_factory.py -p work_semikong
- 1636  cd /workspace/ckarfa/siang_btp/cvdp_benchmark && source cvdp_env/bin/activate && python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m semikong-8b -c slm_test/smollm_factory.py -p work_semikong_fixed
- 1637  python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m semikong-8b -c slm_test/smollm_factory.py -p work_semikong
- 1638  cd /workspace/ckarfa/siang_btp/cvdp_benchmark && source cvdp_env/bin/activate
- 1639  cd /workspace/ckarfa/siang_btp/cvdp_benchmark/slm_test && source ../cvdp_env/bin/activate && python -c "from semikong_model import SemiKongModel; print('SEMIKONG model imported successfully')"
- 1640  cd /workspace/ckarfa/siang_btp/cvdp_benchmark/slm_test && source ../cvdp_env/bin/activate && python -c "
- 1641  from smollm_factory import CustomModelFactory
- 1642  factory = CustomModelFactory()
- 1643  print('Available SEMIKONG models:', [m for m in factory.get_available_models() if 'semikong' in m.lower()])
- 1644  print('SEMIKONG supported:', factory.is_model_supported('semikong-8b'))
- 1645  "
- 1646  cd /workspace/ckarfa/siang_btp/cvdp_benchmark && source cvdp_env/bin/activate && python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m semikong-8b -c slm_test/smollm_factory.py -p work_semikong
- 1647  cd /workspace/ckarfa/siang_btp/cvdp_benchmark && source cvdp_env/bin/activate && pip install optimum auto-gptq
- 1648  cd /workspace/ckarfa/siang_btp/cvdp_benchmark/slm_test && source ../cvdp_env/bin/activate && python -c "from semikong_model import SemiKongModel; print('SEMIKONG model imported successfully')"
- 1649  cd /workspace/ckarfa/siang_btp/cvdp_benchmark/slm_test && source ../cvdp_env/bin/activate && python test_semikong.py
- 1650  cd /workspace/ckarfa/siang_btp/cvdp_benchmark && source cvdp_env/bin/activate && python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m semikong-8b -c slm_test/smollm_factory.py -p work_semikong
- 1651  python run_benchmark.py -f example_dataset/cvdp_v1.0.1_example_nonagentic_code_comprehension_with_solutions.jsonl -l -m smollm2 -c slm_test/smollm_factory.py -p work_slm_test
- 1652  source /workspace/ckarfa/siang_btp/cvdp_benchmark/cvdp_env/bin/activate
- 1653  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
- 1654  curl http://localhost:8000/
- 1655  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
- 1656  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && pip install accelerate
- 1657  cd /workspace/ckarfa/siang_btp/slm_api && python --version
- 1658  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && python --version
- 1659  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && pip install fastapi uvicorn transformers torch pydantic
- 1660  uvicorn main:app --host 0.0.0.0 --port 8000
- 1661  python3 -m venv flask_venv
- 1662  cd slm_api/
- 1663  python3 -m venv flask_venv
- 1664  source flask_venv/bin/activate
- 1665  uvicorn main:app --host 0.0.0.0 --port 8000
- 1666  pip install uvicorn
- 1667  pip install --upgrade pip
- 1668  uvicorn main:app --host 0.0.0.0 --port 8000
- 1669  pip install fastapi
- 1670  clear
- 1671  uvicorn main:app --host 0.0.0.0 --port 8000
- 1672  cd slm_api/
- 1673  source flask_venv/bin/activate
- 1674  sudo ufw allow 8000/tcp
- 1675  pip install ufw
- 1676  sudo ufw allow 8000/tcp
- 1677  curl http://localhost:8000/
- 1678  cat /etc/os-release
- 1679  sudo apt-get install ufw
- 1680  sudo ufw allow 8000/tcp
- 1681  # Run this on the host machine
- 1682  docker ps
- 1683  exit
- 1684  cd /workspace/ckarfa/siang_btp/slm_api && source ../cvdp_benchmark/flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
- 1685  find /workspace/ckarfa/siang_btp -name "flask_venv" -type d
- 1686  cd slm_api/
- 1687  source flask_venv/bin/activate
- 1688  la
- 1689  ls
- 1690  clear
- 1691  sudo ufw enable
- 1692  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
- 1693  sleep 5 && curl http://localhost:8000/
- 1694  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
- 1695  sudo ufw allow 8000/tcp
- 1696  sudo ufw status
- 1697  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
- 1698  curl http://localhost:8000/
- 1699  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000 &
- 1700  curl -X GET http://localhost:8000/
- 1701  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000 &
- 1702  clear
- 1703  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000 &
- 1704  sleep 3 && curl http://localhost:8000/
- 1705  sudo ufw allow 8000/tcp
- 1706  netstat -tulnp | grep 8000
- 1707  cd slm_api/
- 1708  source flask_venv/bin/activate
- 1709  sudo apt install netstat
- 1710  pip install netstat
- 1711  ss -tulnp | grep 8000
- 1712  curl http://127.0.0.1:8000/
- 1713  curl http://172.16.112.198:8000/
- 1714  cd slm_api/
- 1715  source flask_venv/bin/activate
- 1716  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000 
- 1717  clear
- 1718  uvicorn main:app --host 0.0.0.0 --port 8000
- 1719  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1720  exit
- 1721  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1722  cd slm_api/
- 1723  source flask_venv/bin/activate
- 1724  uvicorn main:app --host 0.0.0.0 --port 8000
- 1725  clear
- 1726  uvicorn main:app --host 0.0.0.0 --port 8000
- 1727  cd slm_api/
- 1728  source flask_venv/bin/activate
- 1729  uvicorn main:app --host 0.0.0.0 --port 8000
- 1730  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1731  g++ finding_criticality.cpp -o find
- 1732  ./find
- 1733  g++ compute_k_temp.cpp -o comp
- 1734  ./comp
- 1735  g++ generate_final_cuts_k.cpp -o gen
- 1736  ./gen
- 1737  python test01.py 
- 1738  g++ finding_criticality.cpp -o find
- 1739  ./find
- 1740  g++ compute_k_temp.cpp -o comp
- 1741  ./comp
- 1742  g++ generate_final_cuts_k.cpp -o gen
- 1743  ./gen
- 1744  python test01.py 
- 1745  g++ finding_criticality.cpp -o find
- 1746  ./find
- 1747  g++ compute_k_temp.cpp -o comp
- 1748  ./comp
- 1749  g++ generate_final_cuts_k.cpp -o gen
- 1750  ./gen
- 1751  python test01.py 
- 1752  g++ finding_criticality.cpp -o find
- 1753  ./find
- 1754  g++ compute_k_temp.cpp -o comp
- 1755  ./comp
- 1756  g++ generate_final_cuts_k.cpp -o gen
- 1757  ./gen
- 1758  python test01.py 
- 1759  g++ finding_criticality.cpp -o find
- 1760  ./find
- 1761  g++ compute_k_temp.cpp -o comp
- 1762  ./comp
- 1763  g++ generate_final_cuts_k.cpp -o gen
- 1764  ./gen
- 1765  python test01.py 
- 1766  ls
- 1767  python test01.py 
- 1768  g++ finding_criticality.cpp -o find
- 1769  ./find
- 1770  g++ compute_k_temp.cpp -o comp
- 1771  ./comp
- 1772  g++ generate_final_cuts_k.cpp -o gen
- 1773  ./gen
- 1774  python test01.py 
- 1775  g++ finding_criticality.cpp -o find
- 1776  ./find
- 1777  g++ compute_k_temp.cpp -o comp
- 1778  ./comp
- 1779  g++ generate_final_cuts_k.cpp -o gen
- 1780  ./gen
- 1781  python test01.py 
- 1782  g++ finding_criticality.cpp -o find
- 1783  ./find
- 1784  g++ compute_k_temp.cpp -o comp
- 1785  ./comp
- 1786  g++ generate_final_cuts_k.cpp -o gen
- 1787  ./gen
- 1788  g++ compute_k_temp.cpp -o comp
- 1789  ./comp
- 1790  g++ generate_final_cuts_k.cpp -o gen
- 1791  ./gen
- 1792  python test01.py 
- 1793  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1794  python3 train_neuroschedule.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --epochs 10
- 1795  source sche/bin/activate
- 1796  python3 train_neuroschedule.py --adj ad_t_all_edgelist.pkl --x node_emb_all.pkl --y node_priority_all.pkl --epochs 10
- 1797  mkdir GNN_Book
- 1798  cd GNN_Book/
- 1799  touch Graph_directed.py
- 1800  cat Graph_directed.py 
- 1801  networkx
- 1802  pip3 install networkx
- 1803  python3 Graph_directed.py 
- 1804  pip3 install matplotlib
- 1805  python3 Graph_directed.py 
- 1806  cd Priority-Cuts/Akash/Priority-Cuts-Filter/abc
- 1807  cd ../data/bar
- 1808  touch final_cuts_k.csv
- 1809  cd ../div
- 1810  touch final_cuts_k.csv
- 1811  touch final_cuts_k1.csv
- 1812  touch ../multiplier/final_cuts_k1.csv
- 1813  touch ../square/final_cuts_k1.csv
- 1814  touch ../voter/final_cuts_k1.csv
- 1815  touch ../mem_ctrl/final_cuts_k1.csv
- 1816  touch ../c6288/final_cuts_k1.csv
- 1817  touch ../max/final_cuts_k1.csv
- 1818  g++ finding_criticality.cpp -o find
- 1819  ./find
- 1820  g++ finding_criticality.cpp -o find
- 1821  ./find
- 1822  g++ compute_k_temp.cpp -o comp
- 1823  ./comp
- 1824  g++ generate_final_cuts_k.cpp -o gen
- 1825  ./gen
- 1826  g++ generate_final_cuts_k.cpp -o gen
- 1827  ./gen
- 1828  cd ../abc
- 1829  ./abc
- 1830  make
- 1831  ./abc
- 1832  cd ../cut-sol/
- 1833  g++ finding_criticality.cpp -o find
- 1834  ./find
- 1835  g++ compute_k_temp.cpp -o comp
- 1836  ./comp
- 1837  g++ generate_final_cuts_k.cpp -o gen
- 1838  ./gen
- 1839  g++ finding_criticality.cpp -o find
- 1840  ./find
- 1841  g++ compute_k_temp.cpp -o comp
- 1842  ./comp
- 1843  g++ generate_final_cuts_k.cpp -o gen
- 1844  ./gen
- 1845  g++ finding_criticality.cpp -o find
- 1846  ./find
- 1847  g++ compute_k_temp.cpp -o comp
- 1848  ./comp
- 1849  g++ generate_final_cuts_k.cpp -o gen
- 1850  ./gen
- 1851  g++ finding_criticality.cpp -o find
- 1852  ./find
- 1853  g++ compute_k_temp.cpp -o comp
- 1854  ./comp
- 1855  g++ generate_final_cuts_k.cpp -o gen
- 1856  ./gen
- 1857  g++ finding_criticality.cpp -o find
- 1858  ./find
- 1859  g++ compute_k_temp.cpp -o comp
- 1860  ./comp
- 1861  g++ generate_final_cuts_k.cpp -o gen
- 1862  ./gen
- 1863  g++ finding_criticality.cpp -o find
- 1864  ./find
- 1865  g++ compute_k_temp.cpp -o comp
- 1866  ./comp
- 1867  g++ generate_final_cuts_k.cpp -o gen
- 1868  ./gen
- 1869  g++ finding_criticality.cpp -o find
- 1870  ./find
- 1871  g++ compute_k_temp.cpp -o comp
- 1872  ./comp
- 1873  g++ generate_final_cuts_k.cpp -o gen
- 1874  ./gen
- 1875  g++ finding_criticality.cpp -o find
- 1876  ./find
- 1877  g++ compute_k_temp.cpp -o comp
- 1878  ./comp
- 1879  g++ generate_final_cuts_k.cpp -o gen
- 1880  ./gen
- 1881  g++ finding_criticality.cpp -o find
- 1882  ./find
- 1883  g++ compute_k_temp.cpp -o comp
- 1884  ./comp
- 1885  g++ generate_final_cuts_k.cpp -o gen
- 1886  ./gen
- 1887  g++ finding_criticality.cpp -o find
- 1888  ./find
- 1889  g++ compute_k_temp.cpp -o comp
- 1890  ./comp
- 1891  g++ generate_final_cuts_k.cpp -o gen
- 1892  ./gen
- 1893  g++ compute_k_temp.cpp -o comp
- 1894  ./comp
- 1895  g++ generate_final_cuts_k.cpp -o gen
- 1896  ./gen
- 1897  g++ compute_k_temp.cpp -o comp
- 1898  ./comp
- 1899  g++ generate_final_cuts_k.cpp -o gen
- 1900  ./gen
- 1901  g++ finding_criticality.cpp -o find
- 1902  ./find
- 1903  g++ compute_k_temp.cpp -o comp
- 1904  ./comp
- 1905  g++ generate_final_cuts_k.cpp -o gen
- 1906  ./gen
- 1907  g++ finding_criticality.cpp -o find
- 1908  ./find
- 1909  g++ compute_k_temp.cpp -o comp
- 1910  ./comp
- 1911  g++ generate_final_cuts_k.cpp -o gen
- 1912  ./gen
- 1913  g++ compute_k_temp.cpp -o comp
- 1914  ./comp
- 1915  g++ generate_final_cuts_k.cpp -o gen
- 1916  ./gen
- 1917  g++ finding_criticality.cpp -o find
- 1918  ./find
- 1919  g++ compute_k_temp.cpp -o comp
- 1920  ./comp
- 1921  g++ generate_final_cuts_k.cpp -o gen
- 1922  ./gen
- 1923  g++ finding_criticality.cpp -o find
- 1924  ./find
- 1925  g++ compute_k_temp.cpp -o comp
- 1926  ./comp
- 1927  g++ generate_final_cuts_k.cpp -o gen
- 1928  ./gen
- 1929  g++ finding_criticality.cpp -o find
- 1930  ./find
- 1931  g++ compute_k_temp.cpp -o comp
- 1932  ./comp
- 1933  g++ generate_final_cuts_k.cpp -o gen
- 1934  ./gen
- 1935  g++ finding_criticality.cpp -o find
- 1936  ./find
- 1937  g++ compute_k_temp.cpp -o comp
- 1938  ./comp
- 1939  g++ generate_final_cuts_k.cpp -o gen
- 1940  ./gen
- 1941  g++ finding_criticality.cpp -o find
- 1942  ./find
- 1943  g++ compute_k_temp.cpp -o comp
- 1944  ./comp
- 1945  g++ generate_final_cuts_k.cpp -o gen
- 1946  ./gen
- 1947  g++ finding_criticality.cpp -o find
- 1948  ./find
- 1949  g++ compute_k_temp.cpp -o comp
- 1950  ./comp
- 1951  g++ generate_final_cuts_k.cpp -o gen
- 1952  ./gen
- 1953  g++ finding_criticality.cpp -o find
- 1954  ./find
- 1955  g++ compute_k_temp.cpp -o comp
- 1956  ./comp
- 1957  g++ generate_final_cuts_k.cpp -o gen
- 1958  ./gen
- 1959  cd Priority-Cuts/Akash/Priority-Cuts-Filter/abc
- 1960  ./abc
- 1961  lynx https://agnigarh.iitg.ac.in:1442/login?
- 1962  conda activate abcrl
- 1963  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/div.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test01 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt 
- 1964  cd ABC-RL/IITG_code_clean/ABC-RL_DAGNN/src/
- 1965  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/div.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test01 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt 
- 1966  conda deactivate
- 1967  conda activate abc-rl
- 1968  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/div.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test01 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt 
- 1969  conda deactivate
- 1970  conda activate abcrl
- 1971  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/div.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test01 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt 
- 1972  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/div.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test01 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt --runID 15002
- 1973  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/mem_ctrl.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test02 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt --runID 15002
- 1974  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/arbiter.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test02 --budget 20 --model $HOME/OpenABC/NETV1_set5/gcn-epoch-77-val_loss-4175688.465.pt --runID 15002
- 1975  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/c3540.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test02 --budget 20 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
- 1976  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/arbiter.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test03 --budget 20 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
- 1977  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/c5315.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test04 --budget 20 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
- 1978  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/adder.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test05 --budget 20 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
- 1979  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/multiplier.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test06 --budget 20 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
- 1980  CUDA_VISIBLE_DEVICES=0 python evaluate.py --benchmark $HOME/ABC-RL/arithmetic/square.aig --library $HOME/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib --dumpdir $HOME/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test07 --budget 50 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --runID 15002
- 1981  conda activate abcrl
- 1982  cd ABC-RL/IITG_code_clean/ABC-RL_DAGNN/src
- 1983  CUDA_VISIBLE_DEVICES=0 python evaluate.py     --library /workspace/ckarfa/ABC-RL/IITG_code_clean/lib/7nm/7nm.lib     --dumpdir /workspace/ckarfa/ABC-RL/IITG_code_clean/ABC-RL_DAGNN/dump/test_08   --runID 15001 --model $HOME/OpenABC/NETV1_set41/gcn-epoch-43-val_loss-291.532.pt --budget 50 --benchmark $HOME/ABC-RL/arithmetic/adder.aig  
- 1984  df
- 1985  conda env list
- 1986  conda create -n soum1 python=3.10
- 1987  ls
- 1988  cd siang_btp/
- 1989  ls
- 1990  clear
- 1991  cd slm_api/
- 1992  ls
- 1993  history
- 1994  ls
- 1995  histoy > temp.txt
- 1996  history>temp.txt
+ 1620  exit
+ 1621  ls
+ 1622  w
+ 1623  conda activate abc-rl
+ 1624  cd OpenABC/NETV1_set41
+ 1625  python SA.py 
+ 1626  conda activate abcrl
+ 1627  ls
+ 1628  cd ABC-RL/
+ 1629  ls
+ 1630  cd IITG_code_clean/
+ 1631  LS
+ 1632  ls
+ 1633  cd ABC-RL_DAGNN/
+ 1634  ls
+ 1635  cd ..
+ 1636  ls
+ 1637  cd ..
+ 1638  ls
+ 1639  cd tools
+ 1640  ls
+ 1641  cd abc
+ 1642  ls
+ 1643  abc
+ 1644  ./abc
+ 1645  cd OpenABC_DATA/bench
+ 1646  chmod +x synthesisBulk_max.sh
+ 1647  ./synthesisBulk_max
+ 1648  conda activate abc-rl
+ 1649  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1650  python automate_bulkSynthesis.py --home $HOME
+ 1651  unzip -q /workspace/ckarfa/OpenABC_DATA/bench/max/syn3.zip -d /workspace/ckarfa/OpenABC_DATA/bench/max/syn3
+ 1652  unzip -q /workspace/ckarfa/OpenABC_DATA/bench/max/syn4.zip -d /workspace/ckarfa/OpenABC_DATA/bench/max/syn4
+ 1653  conda activate abc-rl
+ 1654  cd OpenABC_DATA/bench/
+ 1655  ./synthesisBulk_max.sh 
+ 1656  cd OpenABC/datagen_copy/automation/
+ 1657  conda activate abc-rl
+ 1658  python automate_synbench2Graphml.py --home $HOME
+ 1659  for script in adder_* max_* multiplier_* square_* sqrt_* mem_ctrl_* router_* voter_*; do chmod +x "$script"; ./"$script"; done
+ 1660  cd OpenABC_DATA/bench/
+ 1661  conda activate abc-rl
+ 1662  cd ../graphml/
+ 1663  for script in adder_* max_* multiplier_* square_* sqrt_* mem_ctrl_* router_* voter_*; do chmod +x "$script"; ./"$script"; done
+ 1664  cd /OpenABC/datagen/utilities
+ 1665  cd OpenABC/datagen/utilities
+ 1666  conda activate abc-rl
+ 1667  ython PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name multiplier --gs $HOME/OpenABC_DATA/graphml/mult
+ 1668  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name square --gs $HOME/OpenABC_DATA/graphml/sqaure --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1669  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name mem_ctrl --gs $HOME/OpenABC_DATA/graphml/mem_ctrl --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1670  cd OpenABC_DATA/bench/
+ 1671  ./synthesisBulk_max.sh 
+ 1672  for script in *_adder.sh *_multiplier.sh *_square.sh *_sqrt.sh *_mem_ctrl.sh *_router.sh *_voter.sh; do chmod +x "$script"; ./"$script"; done
+ 1673  cd ../graphml/
+ 1674  ./adder_GMLGeneration.sh 
+ 1675  for script in max_* multiplier_* square_* sqrt_* mem_ctrl_* router_* voter_*; do chmod +x "$script"; ./"$script"; done
+ 1676  cd OpenABC_DATA/bench/
+ 1677  conda activate abc-rl
+ 1678  cd ../../OpenABC/datagen/automation/
+ 1679  python automate_bulkSynthesis.py --home $HOME
+ 1680  cd ../utilities/
+ 1681  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name adder --gs $HOME/OpenABC_DATA/graphml/adder --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1682  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name max --gs $HOME/OpenABC_DATA/graphml/max --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1683  python automate_synbench2Graphml.py --home $HOME
+ 1684  cd ../automation/
+ 1685  python automate_synbench2Graphml.py --home $HOME
+ 1686  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name adder --gs $HOME/OpenABC_DATA/graphml/adder --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1687  cd ../utilities/
+ 1688  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name adder --gs $HOME/OpenABC_DATA/graphml/adder --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1689  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name max --gs $HOME/OpenABC_DATA/graphml/max --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1690  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name multiplier --gs $HOME/OpenABC_DATA/graphml/multiplier --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1691  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name square --gs $HOME/OpenABC_DATA/graphml/square --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1692  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name sqrt --gs $HOME/OpenABC_DATA/graphml/sqrt --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1693  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name mem_ctrl --gs $HOME/OpenABC_DATA/graphml/mem_ctrl --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1694  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name router --gs $HOME/OpenABC_DATA/graphml/router --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1695  python PyGDataAIG.py --des $HOME/OpenABC_DATA/ptdata/ --name voter --gs $HOME/OpenABC_DATA/graphml/voter --synvec $HOME/OpenABC_DATA/synthID2Vec_1.pickle
+ 1696  ls
+ 1697  conda activate ABC-RL
+ 1698  conda activate abcrl
+ 1699  ls
+ 1700  cd ABC-RL
+ 1701  ls
+ 1702  cd tools
+ 1703  ls
+ 1704  cd abc
+ 1705  ls
+ 1706  cd ..
+ 1707  code .
+ 1708  pkill -f uvicorn || true; source flask_venv/bin/activate && nohup uvicorn main:app --host 0.0.0.0 --port 8000 > server.log 2>&1 &
+ 1709  sleep 6; tail -n 50 server.log
+ 1710  ss -tlnp | grep :8000 || true
+ 1711  ps -p 3203821 -o pid,cmd --no-headers || true
+ 1712  ps aux | grep 3203821 || true
+ 1713  kill 3203821 || true
+ 1714  uvicorn main:app --host 0.0.0.0 --port 8000
+ 1715  chmod +x /workspace/ckarfa/siang_btp/slm_api/test_quick.py
+ 1716  python3 test_quick.py
+ 1717  chmod +x /workspace/ckarfa/siang_btp/slm_api/test_long_prompt.py
+ 1718  python3 test_long_prompt.py
+ 1719  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1720  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000 > server.log 
+ 1721  uvicorn main:app --host 0.0.0.0 --port 8000 > server.log 2>&1 &
+ 1722  uvicorn main:app --host 0.0.0.0 --port 8000 > server.log 2>&1 
+ 1723  clear
+ 1724  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1725  cd ..
+ 1726  ls
+ 1727  cd cvdp_benchmark/
+ 1728  ls
+ 1729  cat requirements_nemotron.txt 
+ 1730  ls
+ 1731  cat run_benchmark.py 
+ 1732  cd src/
+ 1733  ls
+ 1734  cd ..
+ 1735  ls
+ 1736  cd slm_test/
+ 1737  ls
+ 1738  cat nemotron_model.py 
+ 1739  cd ..
+ 1740  ls 
+ 1741  cat requirements_nemotron.txt 
+ 1742  cd ..
+ 1743  cd /workspace/ckarfa/siang_btp/slm_api && source flask_venv/bin/activate && uvicorn main:app --host 0.0.0.0 --port 8000
+ 1744  lynx https://agnigarh.iitg.ac.in:1442/login?
+ 1745  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/*.json && python3 DataGen.py -v 2>&1 | tee pipeline_run.log
+ 1746  sleep 120 && tail -100 /workspace/ckarfa/SuperGateTM/pipeline_run.log
+ 1747  tail -100 /workspace/ckarfa/SuperGateTM/pipeline_run.log
+ 1748  cd /workspace/ckarfa/SuperGateTM && python3 << 'EOF'
+ 1749  import json
+ 1750  import glob
+ 1751  from collections import Counter
+ 1752  # Count truth table usage across all circuits
+ 1753  truth_table_counts = Counter()
+ 1754  total_lookups = 0
+ 1755  for usage_file in glob.glob('output/data/usage_*.json'):
+ 1756      with open(usage_file) as f:
+ 1757          for line in f:
+ 1758              if line.strip():
+ 1759                  data = json.loads(line)
+ 1760                  tt = data.get('supergate_id')
+ 1761                  if tt:
+ 1762                      truth_table_counts[tt] += 1
+ 1763                      total_lookups += 1
+ 1764  print(f'Total supergate lookups: {total_lookups:,}')
+ 1765  print(f'Unique truth tables used: {len(truth_table_counts)}')
+ 1766  print(f'\nTop 30 most used truth tables:')
+ 1767  for i, (tt, count) in enumerate(truth_table_counts.most_common(30), 1):
+ 1768      pct = 100 * count / total_lookups
+ 1769      print(f'{i:2d}. {tt}: {count:,} ({pct:.2f}%)')
+ 1770  print(f'\nTop 10 account for: {sum(c for _, c in truth_table_counts.most_common(10))/total_lookups*100:.1f}% of usage')
+ 1771  print(f'Top 30 account for: {sum(c for _, c in truth_table_counts.most_common(30))/total_lookups*100:.1f}% of usage')
+ 1772  EOF
+ 1773  cd /workspace/ckarfa/SuperGateTM && python3 analyze_usage.py
+ 1774  ls -la /workspace/ckarfa/SuperGateTM && sed -n '1,120p' /workspace/ckarfa/SuperGateTM/DataGen.py
+ 1775  ls
+ 1776  ls /workspace/ckarfa/SuperGateTM/Circuits/ | head -10 && echo "---lib folder---" && ls /workspace/ckarfa/SuperGateTM/lib/
+ 1777  ls /workspace/ckarfa/SuperGateTM/lib/7nm/ && echo "---ABC executable---" && ls -lh /workspace/ckarfa/SuperGateTM/abc/abc 2>&1 || echo "ABC not built yet"
+ 1778  cd /workspace/ckarfa/SuperGateTM/abc && make clean && make -j4 2>&1 | tail -50
+ 1779  ls -lh /workspace/ckarfa/SuperGateTM/abc/abc && echo "Build completed successfully!"
+ 1780  chmod +x /workspace/ckarfa/SuperGateTM/test_setup.sh && cd /workspace/ckarfa/SuperGateTM && ./test_setup.sh
+ 1781  python3 DataGen.py -v
+ 1782  ls
+ 1783  cls
+ 1784  clear
+ 1785  python3 DataGen.py -v
+ 1786  printenv SUPERGATE_USAGE_LOG
+ 1787  printenv CURRENT_CIRCUIT
+ 1788  cd /workspace/ckarfa/SuperGateTM && ./abc/abc -c "help read_super" 2>&1 | head -20
+ 1789  cd /workspace/ckarfa/SuperGateTM && echo -e "help\nquit" | ./abc/abc 2>&1 | grep -A2 "read_super"
+ 1790  cd /workspace/ckarfa/SuperGateTM && ./abc/abc -c "read_lib lib/7nm/7nm.lib; super -h" 2>&1 | tail -30
+ 1791  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_LOG_FILE="/workspace/ckarfa/SuperGateTM/output/data/test_super.json" && ./abc/abc -c "read_lib lib/7nm/7nm.lib; write_genlib output/test.genlib; quit" 2>&1 | tail -10
+ 1792  cd /workspace/ckarfa/SuperGateTM && ./abc/abc -c "read_lib lib/7nm/7nm.lib; super" 2>&1 | grep -A5 "usage:"
+ 1793  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/test_super.json && export SUPERGATE_LOG_FILE="/workspace/ckarfa/SuperGateTM/output/data/test_super.json" && ./abc/abc -c "read_lib lib/7nm/7nm.lib; write_genlib output/test.genlib; super -I 3 -L 1 -v output/test.genlib; quit" 2>&1 | tail -20 && echo "---" && ls -lh output/data/test_super.json 2>&1
+ 1794  cd /workspace/ckarfa/SuperGateTM && head -3 output/data/test_super.json
+ 1795  cd /workspace/ckarfa/SuperGateTM && python3 DataGen.py -v 2>&1 | tee output/pipeline_run.log
+ 1796  ls -lh /workspace/ckarfa/SuperGateTM/output/data/usage_*.json 2>&1
+ 1797  cd /workspace/ckarfa/SuperGateTM/abc && make -j$(nproc)
+ 1798  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/usage_*.json && ls -lh output/data/usage_*.json 2>&1
+ 1799  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_test.json" && export CURRENT_CIRCUIT="test_circuit" && ./abc/abc -c "read Circuits/adder.aig; read_super output/supergate_library.super; map; write output/test_mapped.blif"
+ 1800  ls -lh /workspace/ckarfa/SuperGateTM/output/*.super 2>&1
+ 1801  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_test.json" && export CURRENT_CIRCUIT="test_circuit" && ./abc/abc -c "read Circuits/adder.aig; read_super output/library.super; map; write output/test_mapped.blif"
+ 1802  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_test.json" && export CURRENT_CIRCUIT="test_circuit" && ./abc/abc -c "read_lib lib/7nm/7nm.lib; write_genlib output/test.genlib; read Circuits/adder.aig; read_super output/library.super; map; write output/test_mapped.blif"
+ 1803  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_test.json" && export CURRENT_CIRCUIT="test_circuit" && ./abc/abc -c "read_lib lib/7nm/7nm.lib; write_genlib output/library.genlib; read Circuits/adder.aig; read_super output/library.super; map; write output/test_mapped.blif"
+ 1804  head -5 /workspace/ckarfa/SuperGateTM/output/library.super
+ 1805  ls -lh /workspace/ckarfa/SuperGateTM/output/library.genlib
+ 1806  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_test.json" && export CURRENT_CIRCUIT="test_circuit" && ./abc/abc -c "read Circuits/adder.aig; read_super output/library.super; map; write output/test_mapped.blif"
+ 1807  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_test.json" && export CURRENT_CIRCUIT="test_circuit" && ./abc/abc -c "read_genlib output/library.genlib; read Circuits/adder.aig; read_super output/library.super; map; write output/test_mapped.blif"
+ 1808  cd /workspace/ckarfa/SuperGateTM && python3 DataGen.py -n 2 -v
+ 1809  cd /workspace/ckarfa/SuperGateTM && python3 DataGen.py --help
+ 1810  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/usage_*.json && python3 DataGen.py -v 2>&1 | head -100
+ 1811  cd /workspace/ckarfa/SuperGateTM && python3 DataGen.py -v 2>&1 | tail -50
+ 1812  ls -lh /workspace/ckarfa/SuperGateTM/output/data/usage_*.json 2>&1
+ 1813  cd /workspace/ckarfa/SuperGateTM/abc && make -j$(nproc) 2>&1 | tail -20
+ 1814  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_test.json" && export CURRENT_CIRCUIT="test_circuit" && ./abc/abc -c "read_genlib output/library.genlib; read Circuits/adder.aig; map; write output/test_mapped.blif" 2>&1 | grep -i debug
+ 1815  ls -lh /workspace/ckarfa/SuperGateTM/output/data/usage_test.json
+ 1816  cd /workspace/ckarfa/SuperGateTM/abc && make -j$(nproc) 2>&1 | tail -10
+ 1817  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/usage_test.json && export SUPERGATE_USAGE_LOG="output/data/usage_test.json" && export CURRENT_CIRCUIT="test_circuit" && ./abc/abc -c "read_genlib output/library.genlib; read Circuits/adder.aig; map; write output/test_mapped.blif" 2>&1 | head -20
+ 1818  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/usage_*.json && python3 DataGen.py -v 2>&1 | tail -60
+ 1819  ls -lh /workspace/ckarfa/SuperGateTM/output/data/usage_*.json
+ 1820  cat /workspace/ckarfa/SuperGateTM/output/logs/adder.log 2>&1 | head -30
+ 1821  cat /workspace/ckarfa/SuperGateTM/output/logs/adder.log 2>&1 | grep -i "debug.*lookup" | head -10
+ 1822  cat /workspace/ckarfa/SuperGateTM/output/logs/adder.log
+ 1823  cat /workspace/ckarfa/SuperGateTM/output/map_adder.abc
+ 1824  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_manual_test.json" && export CURRENT_CIRCUIT="manual_test" && ./abc/abc -c "read Circuits/adder.aig; read_genlib output/library.genlib; read_super output/library.super; map -v; print_stats" 2>&1 | grep -A5 -B5 "DEBUG"
+ 1825  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_manual_test.json" && export CURRENT_CIRCUIT="manual_test" && ./abc/abc -c "read Circuits/adder.aig; read_genlib output/library.genlib; read_super output/library.super; map -v; print_stats" 2>&1
+ 1826  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/usage_*.json output/logs/*.log && python3 DataGen.py -v 2>&1 | tail -70
+ 1827  cat /workspace/ckarfa/SuperGateTM/output/logs/adder.log
+ 1828  cat /workspace/ckarfa/SuperGateTM/output/map_adder.abc
+ 1829  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_manual_test.json" && export CURRENT_CIRCUIT="manual_test" && ./abc/abc -f output/map_adder.abc 2>&1 | tail -30
+ 1830  cd /workspace/ckarfa/SuperGateTM && timeout 10 bash -c 'export SUPERGATE_USAGE_LOG="output/data/usage_manual_test.json" && export CURRENT_CIRCUIT="manual_test" && ./abc/abc -f output/map_adder.abc' 2>&1
+ 1831  cd /workspace/ckarfa/SuperGateTM/abc && make -j$(nproc) 2>&1 | tail -5
+ 1832  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/usage_manual_test.json && export SUPERGATE_USAGE_LOG="output/data/usage_manual_test.json" && export CURRENT_CIRCUIT="manual_test" && timeout 10 ./abc/abc -f output/map_adder.abc 2>&1 | tail -20
+ 1833  cd /workspace/ckarfa/SuperGateTM && export SUPERGATE_USAGE_LOG="output/data/usage_manual_test.json" && export CURRENT_CIRCUIT="manual_test" && echo "run -f output/map_adder.abc" | gdb ./abc/abc 2>&1 | tail -40
+ 1834  cd /workspace/ckarfa/SuperGateTM/abc && make -j$(nproc) 2>&1 | tail -3
+ 1835  cd /workspace/ckarfa/SuperGateTM && timeout 10 ./abc/abc -f output/map_adder.abc 2>&1 | tail -20
+ 1836  cd /workspace/ckarfa/SuperGateTM && ./abc/abc -c "read Circuits/adder.aig; read_genlib output/library.genlib; map -v; print_stats" 2>&1 | tail -20
+ 1837  head -10 /workspace/ckarfa/SuperGateTM/output/library.super
+ 1838  cd /workspace/ckarfa/SuperGateTM/abc && make -j$(nproc) 2>&1 | tail -3
+ 1839  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/*.json output/logs/*.log && python3 DataGen.py -v 2>&1 | tail -80
+ 1840  ls -lh /workspace/ckarfa/SuperGateTM/output/data/usage_*.json | head -5
+ 1841  cat /workspace/ckarfa/SuperGateTM/output/logs/adder.log
+ 1842  cd /workspace/ckarfa/SuperGateTM/abc && make -j$(nproc) 2>&1 | tail -3
+ 1843  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/usage_*.json && python3 DataGen.py -v 2>&1 | grep "Mapping circuit" | head -3
+ 1844  cat /workspace/ckarfa/SuperGateTM/output/data/usage_adder.json
+ 1845  cd /workspace/ckarfa/SuperGateTM/abc && make -j$(nproc) 2>&1 | tail -3
+ 1846  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/usage_test.json && export SUPERGATE_USAGE_LOG="output/data/usage_test.json" && export CURRENT_CIRCUIT="test" && ./abc/abc -f output/map_adder.abc 2>&1 > /dev/null && wc -l output/data/usage_test.json && head -5 output/data/usage_test.json
+ 1847  cd /workspace/ckarfa/SuperGateTM/abc && make -j$(nproc) 2>&1 | tail -3
+ 1848  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/usage_test.json && export SUPERGATE_USAGE_LOG="output/data/usage_test.json" && export CURRENT_CIRCUIT="test" && ./abc/abc -f output/map_adder.abc 2>&1 > /dev/null && wc -l output/data/usage_test.json && head -10 output/data/usage_test.json
+ 1849  cd /workspace/ckarfa/SuperGateTM/abc && make -j$(nproc) 2>&1 | tail -3
+ 1850  cd /workspace/ckarfa/SuperGateTM && rm -f output/data/*.json && python3 DataGen.py -v 2>&1 | tail -60
+ 1851  head -5 /workspace/ckarfa/SuperGateTM/output/data/usage_adder.json
+ 1852  head -5 /workspace/ckarfa/SuperGateTM/output/data/supergate_generation.json
+ 1853  cd /workspace/ckarfa/SuperGateTM && python3 DataGen.py -v 2>&1 | tail -40
+ 1854  head -10 /workspace/ckarfa/SuperGateTM/output/data/supergate_dataset.csv
+ 1855  cd /workspace/ckarfa/SuperGateTM && python3 DataGen.py -v 2>&1 | tail -40
+ 1856  cd /workspace/ckarfa/SuperGateTM && python3 DataGen.py -v 2>&1 | grep -A10 "Generating final dataset"
+ 1857  grep -A5 "^[^#]" /workspace/ckarfa/SuperGateTM/output/library.super | head -20
+ 1858  grep "feasible cuts" /workspace/ckarfa/SuperGateTM/output/logs/adder.log
+ 1859  cd /workspace/ckarfa/SuperGateTM/output/data && for file in usage_*.json; do echo "$file: $(wc -l < $file) lookups"; done | head -10
+ 1860  cd /workspace/ckarfa/SuperGateTM && python3 -c "
+ 1861  import json
+ 1862  from collections import Counter
+ 1863  # Count truth table usage across all circuits
+ 1864  truth_table_counts = Counter()
+ 1865  total_lookups = 0
+ 1866  import glob
+ 1867  for usage_file in glob.glob('output/data/usage_*.json'):
+ 1868      with open(usage_file) as f:
+ 1869          for line in f:
+ 1870              if line.strip():
+ 1871                  data = json.loads(line)
+ 1872                  tt = data.get('supergate_id')
+ 1873                  if tt:
+ 1874                      truth_table_counts[tt] += 1
+ 1875                      total_lookups += 1
+ 1876  print(f'Total supergate lookups: {total_lookups}')
+ 1877  print(f'Unique truth tables used: {len(truth_table_counts)}')
+ 1878  print(f'\nTop 10 most used truth tables:')
+ 1879  for tt, count in truth_table_counts.most_common(10):
+ 1880      print(f'  {tt}: {count} times ({100*count/total_lookups:.2f}%)')
+ 1881  "
+ 1882  cd Priority-Cuts/Akash/Priority-Cuts-Filter/
+ 1883  cd Priority-Cuts/Akash/Priority-Cuts-Filter/
+ 1884  cd cut-sol/
+ 1885  g++ generate_final_cuts.cpp
+ 1886  ./a.out
+ 1887  g++ generate_final_cuts.cpp
+ 1888  ./a.out
+ 1889  g++ generate_final_cuts.cpp
+ 1890  ./a.out
+ 1891  g++ generate_final_cuts.cpp
+ 1892  ./a.out
+ 1893  g++ generate_final_cuts.cpp
+ 1894  ./a.out
+ 1895  g++ generate_final_cuts.cpp
+ 1896  ./a.out
+ 1897  g++ generate_final_cuts.cpp
+ 1898  ./a.out
+ 1899  g++ generate_final_cuts.cpp
+ 1900  ./a.out
+ 1901  g++ generate_final_cuts.cpp
+ 1902  ./a.out
+ 1903  g++ generate_final_cuts.cpp
+ 1904  ./a.out
+ 1905  g++ generate_final_cuts.cpp
+ 1906  ./a.out
+ 1907  g++ generate_final_cuts.cpp
+ 1908  ./a.out
+ 1909  g++ generate_final_cuts.cpp
+ 1910  ./a.out
+ 1911  g++ generate_final_cuts.cpp
+ 1912  ./a.out
+ 1913  g++ generate_final_cuts.cpp
+ 1914  ./a.out
+ 1915  g++ generate_final_cuts.cpp
+ 1916  ./a.out
+ 1917  g++ generate_final_cuts.cpp
+ 1918  ./a.out
+ 1919  g++ generate_final_cuts.cpp
+ 1920  ./a.out
+ 1921  g++ generate_final_cuts.cpp
+ 1922  ./a.out
+ 1923  g++ generate_final_cuts.cpp
+ 1924  ./a.out
+ 1925  cd Priority-Cuts/Akash/Priority-Cuts-Filter/
+ 1926  ls
+ 1927  cd abc
+ 1928  ./abc
+ 1929  make
+ 1930  ./abc
+ 1931  cd OpenABC/datagen_copy/utilities/
+ 1932  conda activate abc-r;
+ 1933  conda activate abc-rl
+ 1934  python collectAreaAndDelay.py --home $HOME
+ 1935  python collectGraphStatistics.py --gml $HOME/OpenABC_DATA/graphml/ --des adder --stats $HOME/OpenABC_DATA/statistics/
+ 1936  python collectGraphStatistics.py --gml $HOME/OpenABC_DATA/graphml/ --des max --stats $HOME/OpenABC_DATA/statistics/
+ 1937  python collectGraphStatistics.py --gml $HOME/OpenABC_DATA/graphml/ --des multiplier --stats $HOME/OpenABC_DATA/statistics/
+ 1938  python collectGraphStatistics.py --gml $HOME/OpenABC_DATA/graphml/ --des square --stats $HOME/OpenABC_DATA/statistics/
+ 1939  python collectGraphStatistics.py --gml $HOME/OpenABC_DATA/graphml/ --des sqrt --stats $HOME/OpenABC_DATA/statistics/
+ 1940  python collectGraphStatistics.py --gml $HOME/OpenABC_DATA/graphml/ --des mem_ctrl --stats $HOME/OpenABC_DATA/statistics/
+ 1941  python collectGraphStatistics.py --gml $HOME/OpenABC_DATA/graphml/ --des router --stats $HOME/OpenABC_DATA/statistics/
+ 1942  python collectGraphStatistics.py --gml $HOME/OpenABC_DATA/graphml/ --des voter --stats $HOME/OpenABC_DATA/statistics/
+ 1943  python pickleStatsForML.py --stats $HOME/OpenABC_DATA/statistics/
+ 1944  python collectAreaAndDelay.py --home $HOME
+ 1945  python pickleStatsForML.py --stats $HOME/OpenABC_DATA/statistics/
+ 1946  cd Priority-Cuts/Akash/Priority-Cuts-Filter/
+ 1947  cd abc
+ 1948  ./run_abc_synth.sh
+ 1949  chmod +x run_abc_synth.sh 
+ 1950  ./run_abc_synth.sh
+ 1951  ./abc
+ 1952  conda activate abc-rl
+ 1953  python pickleStatsForML.py --stats $HOME/OpenABC_DATA/statistics/
+ 1954  cd ../../datagen/utilities/
+ 1955  python pickleStatsForML.py --stats $HOME/OpenABC_DATA/statistics/
+ 1956  cd ../../datagen_copy/utilities/
+ 1957  python pickleStatsForML.py --stats $HOME/OpenABC_DATA/statistics/
+ 1958  conda activate abc-rl
+ 1959  cd OpenABC_DATA/lp
+ 1960  cd OpenABC_DATA/lp1
+ 1961  python test3.py
+ 1962  conda activate abc-rl
+ 1963  cd ../../datagen_copy/automation/
+ 1964  python automate_synthesisScriptGen.py --home $HOME --script $HOME/OpenABC_DATA/synScripts/
+ 1965  cd ../../datagen/automation/
+ 1966  python automate_bulkSynthesis.py --home $HOME
+ 1967  cd ../../../OpenABC_DATA/bench
+ 1968  for script in *_adder.sh *_multiplier.sh *_square.sh *_max.sh *_sqrt.sh *_mem_ctrl.sh *_router.sh *_voter.sh; do chmod +x "$script"; ./"$script"; done
+ 1969  cd OpenABC/models/qor/SynthNetV1
+ 1970  conda activate abc-rl
+ 1971  python train.py --batch_size 16 --rundir $HOME/OpenABC/NETV1_set01 --lp 2 --target area --datadir $HOME/OpenABC_DATA/lp1
+ 1972  python train.py --batch_size 16 --rundir $HOME/OpenABC/NETV1_set01 --lp 1 --target area --datadir $HOME/OpenABC_DATA/lp1
+ 1973  python train.py --batch_size 16 --rundir $HOME/OpenABC/NETV1_set01 --lp 1 --target area --datadir $HOME/OpenABC_DATA/
+ 1974  cd ../../../NETV1_set01
+ 1975  python test.py
+ 1976  clear
+ 1977  cd ../models/qor/SynthNetV1
+ 1978  python evaluate.py --batch_size 16 --rundir $HOME/OpenABC/NETV1_set01 --model $HOME/OpenABC/NETV1_set01/gcn-epoch-45-val_loss-289353.873.pt --target area --datadir $HOME/OpenABC_DATA/lp1
+ 1979  python evaluate.py --batch_size 16 --rundir $HOME/OpenABC/NETV1_set01 --model $HOME/OpenABC/NETV1_set01/gcn-epoch-45-val_loss-289353.873.pt --target area --datadir $HOME/OpenABC_DATA/
+ 1980  python evaluate.py --batch_size 16 --rundir $HOME/OpenABC/NETV1_set01 --model $HOME/OpenABC/NETV1_set01/gcn-epoch-45-val_loss-289353.873.pt --target area --datadir $HOME/OpenABC_DATA/lp1
+ 1981  cd OpenABC/NETV1_set01
+ 1982  conda activate abc-rl
+ 1983  python test.py
+ 1984  cd OpenABC_DATA/bench
+ 1985  cd ../../OpenABC/datagen/automation/
+ 1986  python automate_bulkSynthesis.py --home $HOME
+ 1987  cd ../utilities/
+ 1988  cd ../../datagen_copy/utilities/
+ 1989  python collectAreaAndDelay.py --home $HOME
+ 1990  python pickleStatsForML.py --stats $HOME/OpenABC_DATA/statistics/
+ 1991  source /workspace/ckarfa/siang_btp/slm_api/flask_venv/bin/activate
+ 1992  history > temp.txt

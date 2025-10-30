@@ -6,58 +6,12 @@ from typing import Optional, Dict, Any
 import logging
 import time
 import traceback
-import json
-import os
-from datetime import datetime
 from contextlib import asynccontextmanager
+from nemotron_model import NemotronModel
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-# Initialize output file path
-OUTPUT_FILE = "output.txt"
-
-def log_api_call(endpoint: str, request_data: Dict[str, Any], response_data: Dict[str, Any], duration: float):
-    """Log API call details to output.txt file"""
-    try:
-        # Create log entry
-        log_entry = {
-            "timestamp": datetime.now().isoformat(),
-            "endpoint": endpoint,
-            "duration_seconds": round(duration, 3),
-            "request": request_data,
-            "response": response_data
-        }
-        
-        # Write to output file
-        with open(OUTPUT_FILE, "a", encoding="utf-8") as f:
-            f.write("=" * 80 + "\n")
-            f.write(f"TIMESTAMP: {log_entry['timestamp']}\n")
-            f.write(f"ENDPOINT: {log_entry['endpoint']}\n")
-            f.write(f"DURATION: {log_entry['duration_seconds']}s\n")
-            f.write("\nREQUEST:\n")
-            f.write(json.dumps(log_entry['request'], indent=2, ensure_ascii=False) + "\n")
-            f.write("\nRESPONSE:\n")
-            f.write(json.dumps(log_entry['response'], indent=2, ensure_ascii=False) + "\n")
-            f.write("=" * 80 + "\n\n")
-        
-        logger.info(f"API call logged to {OUTPUT_FILE}")
-        
-    except Exception as e:
-        logger.error(f"Failed to log API call: {e}")
-
-def initialize_output_file():
-    """Initialize output.txt file with header"""
-    try:
-        with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
-            f.write("SLM API CALL LOGS\n")
-            f.write("=" * 80 + "\n")
-            f.write(f"Log started: {datetime.now().isoformat()}\n")
-            f.write("=" * 80 + "\n\n")
-        logger.info(f"Initialized output log file: {OUTPUT_FILE}")
-    except Exception as e:
-        logger.error(f"Failed to initialize output file: {e}")
 
 class SmolLMModel:
     """SmolLM2-1.7B-Instruct model implementation - lightweight SLM for API use"""
@@ -68,24 +22,44 @@ class SmolLMModel:
         logger.info(f"Loading {model}...")
         
         try:
-            self.tokenizer = AutoTokenizer.from_pretrained(model)
+            # Load tokenizer with proper settings
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                model, 
+                trust_remote_code=True,
+                use_fast=True
+            )
+            
+            # Set padding token properly
             if self.tokenizer.pad_token is None:
                 self.tokenizer.pad_token = self.tokenizer.eos_token
             
+            # Ensure we have proper special tokens
+            if self.tokenizer.bos_token is None:
+                self.tokenizer.bos_token = self.tokenizer.eos_token
+            
+            # Load model with updated settings
             if torch.cuda.is_available():
                 self.model = AutoModelForCausalLM.from_pretrained(
                     model,
-                    torch_dtype=torch.float16,
+                    torch_dtype=torch.float16,  # Use torch_dtype for compatibility
                     device_map="auto",
-                    trust_remote_code=True
+                    trust_remote_code=True,
+                    low_cpu_mem_usage=True
                 )
             else:
                 self.model = AutoModelForCausalLM.from_pretrained(
                     model,
-                    trust_remote_code=True
+                    trust_remote_code=True,
+                    low_cpu_mem_usage=True
                 ).to(self.device)
             
+            # Set model to eval mode
+            self.model.eval()
+            
             logger.info(f"SmolLM2 model loaded successfully on {self.device}")
+            logger.info(f"Model vocab size: {self.model.config.vocab_size}")
+            logger.info(f"Model max position embeddings: {getattr(self.model.config, 'max_position_embeddings', 'Unknown')}")
+            
         except Exception as e:
             logger.error(f"Failed to load SmolLM2 model: {e}")
             raise
@@ -122,12 +96,24 @@ class SmolLMModel:
             raise RuntimeError(f"Text generation failed: {str(e)}")
 
     def _preprocess_prompt(self, prompt: str) -> str:
-        """Preprocess prompt to improve generation quality with 10x enhancement for complex prompts"""
-        # Check if prompt requires JSON format - enhanced instruction
-        if '"response":' in prompt or '{ "response":' in prompt:
-            # Add comprehensive instruction for JSON format with detailed response
-            if not prompt.startswith("Generate a detailed JSON response"):
-                prompt = f"Generate a comprehensive, detailed JSON response with thorough technical explanation, multiple examples, and complete analysis. Provide extensive detail in your response. {prompt}\n\nProvide a very thorough, comprehensive, detailed response with extensive technical analysis:"
+        """Preprocess prompt to improve generation quality for SmolLM"""
+        # SmolLM2 works better with conversational format
+        if not prompt.strip().startswith("<|im_start|>"):
+            # Add proper chat template for SmolLM2
+            if '"response":' in prompt or '{ "response":' in prompt:
+                # For JSON responses, be more explicit
+                prompt = f"<|im_start|>user\n{prompt}<|im_end|>\n<|im_start|>assistant\n"
+            else:
+                # For regular conversations
+                prompt = f"<|im_start|>user\n{prompt}<|im_end|>\n<|im_start|>assistant\n"
+        
+        # Handle very long technical prompts by adding focus instruction
+        if len(prompt) > 500 and ("barrel shifter" in prompt.lower() or "testing" in prompt.lower()):
+            # Insert focus instruction before the user message
+            prompt = prompt.replace("<|im_start|>user\n", 
+                                  "<|im_start|>user\nProvide a clear, technical explanation focusing on key concepts.\n\n")
+            
+        return prompt
         
         # Handle technical prompts by adding comprehensive instruction - enhanced
         if len(prompt) > 300 and any(term in prompt.lower() for term in ["barrel shifter", "testing", "circular shift", "verification", "lfsr", "hardware"]):
@@ -157,23 +143,35 @@ class SmolLMModel:
         return response
 
     def _single_generation(self, inputs, max_new_tokens, temperature, top_p):
-        """Single generation attempt with Phi-3.5 compatibility"""
+        """Single generation attempt with improved compatibility"""
         try:
             with torch.no_grad():
-                # Use legacy cache for Phi-3.5 compatibility
-                outputs = self.model.generate(
-                    inputs['input_ids'],
-                    attention_mask=inputs['attention_mask'],
-                    max_new_tokens=max_new_tokens,
-                    temperature=temperature,
-                    top_p=top_p,
-                    do_sample=temperature > 0,
-                    pad_token_id=self.tokenizer.eos_token_id,
-                    eos_token_id=self.tokenizer.eos_token_id,
-                    repetition_penalty=1.1,
-                    use_cache=True,
-                    # Remove early_stopping for compatibility
-                )
+                # Use more compatible generation parameters
+                generation_kwargs = {
+                    'input_ids': inputs['input_ids'],
+                    'attention_mask': inputs['attention_mask'],
+                    'max_new_tokens': max_new_tokens,
+                    'pad_token_id': self.tokenizer.eos_token_id,
+                    'eos_token_id': self.tokenizer.eos_token_id,
+                    'repetition_penalty': 1.1,
+                    'use_cache': True
+                }
+                
+                # Add sampling parameters only if temperature > 0
+                if temperature > 0:
+                    generation_kwargs.update({
+                        'do_sample': True,
+                        'temperature': max(temperature, 0.1),  # Ensure minimum temperature
+                        'top_p': top_p,
+                        'top_k': 50  # Add top_k for better sampling
+                    })
+                else:
+                    generation_kwargs['do_sample'] = False
+                
+                # Remove early_stopping for compatibility
+                # generation_kwargs['early_stopping'] = True  # Commented out for compatibility
+                
+                outputs = self.model.generate(**generation_kwargs)
             
             input_length = inputs['input_ids'].shape[1]
             response_tokens = outputs[0][input_length:]
@@ -184,7 +182,8 @@ class SmolLMModel:
             
             return response
         except Exception as e:
-            logger.error(f"Generation failed: {e}")
+            logger.error(f"SmolLM generation failed: {e}")
+            logger.error(f"Generation kwargs: {generation_kwargs if 'generation_kwargs' in locals() else 'Not available'}")
             return ""
 
     def _clean_response(self, response: str) -> str:
@@ -225,6 +224,187 @@ class SmolLMModel:
                 response = f'{{"response": "{clean_response}"}}'
         
         return response
+
+# GPTOSSModel removed - replaced with NemotronModel
+# All old GPT-OSS related code has been removed
+
+class JambaModel:
+    """AI21 Jamba Reasoning 3B model implementation - Hybrid Transformer-Mamba architecture"""
+    def __init__(self, model: str = "ai21labs/AI21-Jamba-Reasoning-3B"):
+        self.model_name = model
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        logger.info(f"Using device: {self.device}")
+        logger.info(f"Loading {model}...")
+        
+        try:
+            # Load tokenizer with fallback for format issues
+            try:
+                self.tokenizer = AutoTokenizer.from_pretrained(
+                    model, 
+                    trust_remote_code=True,
+                    use_fast=False  # Use slow tokenizer to avoid format issues
+                )
+            except Exception as e:
+                logger.warning(f"Failed with slow tokenizer, trying fast tokenizer: {e}")
+                self.tokenizer = AutoTokenizer.from_pretrained(
+                    model, 
+                    trust_remote_code=True,
+                    use_fast=True
+                )
+            
+            # Set padding token properly
+            if self.tokenizer.pad_token is None:
+                self.tokenizer.pad_token = self.tokenizer.eos_token
+            
+            # Load model with optimized settings for Jamba
+            if torch.cuda.is_available():
+                # Load config and disable fast Mamba kernels (use naive implementation)
+                from transformers import AutoConfig
+                config = AutoConfig.from_pretrained(model, trust_remote_code=True)
+                config.use_mamba_kernels = False  # Use naive implementation to avoid kernel requirements
+                
+                # Use bfloat16 as recommended for Jamba
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model,
+                    config=config,
+                    torch_dtype=torch.bfloat16,
+                    device_map="auto",
+                    trust_remote_code=True,
+                    low_cpu_mem_usage=True
+                )
+                logger.info("Jamba model loaded with naive Mamba implementation (no fast kernels required)")
+            else:
+                from transformers import AutoConfig
+                config = AutoConfig.from_pretrained(model, trust_remote_code=True)
+                config.use_mamba_kernels = False
+                
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model,
+                    config=config,
+                    trust_remote_code=True,
+                    low_cpu_mem_usage=True
+                ).to(self.device)
+            
+            # Set model to eval mode
+            self.model.eval()
+            
+            logger.info(f"Jamba model loaded successfully on {self.device}")
+            logger.info(f"Model vocab size: {self.model.config.vocab_size}")
+            logger.info(f"Model supports context length: 256k tokens")
+            
+        except Exception as e:
+            logger.error(f"Failed to load Jamba model: {e}")
+            raise
+
+    def generate_text(self, prompt: str, max_length: int = 1000, temperature: float = 0.7, top_p: float = 0.9) -> str:
+        """
+        Generate response using AI21 Jamba Reasoning 3B model
+        """
+        try:
+            start_time = time.time()
+            
+            # Format prompt using chat template
+            messages = [
+                {"role": "user", "content": prompt}
+            ]
+            
+            # Apply chat template if available
+            try:
+                formatted_prompt = self.tokenizer.apply_chat_template(
+                    messages, 
+                    add_generation_prompt=True, 
+                    tokenize=False
+                )
+            except Exception as e:
+                logger.warning(f"Chat template not available, using direct prompt: {e}")
+                formatted_prompt = prompt
+            
+            # Tokenize with proper settings for long context support
+            inputs = self.tokenizer(
+                formatted_prompt, 
+                return_tensors="pt", 
+                padding=True, 
+                truncation=True, 
+                max_length=8192  # Use reasonable context window
+            ).to(self.device)
+            
+            input_length = inputs['input_ids'].shape[1]
+            
+            # Calculate max_new_tokens - Jamba can handle very long outputs
+            max_new_tokens = min(max(200, max_length - input_length), 4096)
+            
+            if max_new_tokens <= 0:
+                logger.warning(f"Input too long, no room for generation. Input length: {input_length}")
+                return "Input prompt too long for generation."
+            
+            # Generate with optimized parameters for Jamba
+            with torch.no_grad():
+                generation_kwargs = {
+                    'input_ids': inputs['input_ids'],
+                    'attention_mask': inputs['attention_mask'],
+                    'max_new_tokens': max_new_tokens,
+                    'pad_token_id': self.tokenizer.eos_token_id,
+                    'eos_token_id': self.tokenizer.eos_token_id,
+                    'repetition_penalty': 1.1,
+                    'use_cache': True
+                }
+                
+                # Add sampling parameters if temperature > 0
+                if temperature > 0:
+                    generation_kwargs.update({
+                        'do_sample': True,
+                        'temperature': max(temperature, 0.1),
+                        'top_p': top_p,
+                        'top_k': 50
+                    })
+                else:
+                    generation_kwargs['do_sample'] = False
+                
+                outputs = self.model.generate(**generation_kwargs)
+            
+            # Decode only new tokens
+            response_tokens = outputs[0][input_length:]
+            response = self.tokenizer.decode(response_tokens, skip_special_tokens=True).strip()
+            
+            # Clean up response
+            response = self._clean_response(response)
+            
+            generation_time = time.time() - start_time
+            logger.info(f"Jamba generated {len(response_tokens)} tokens in {generation_time:.2f}s")
+            
+            return response if response else "Unable to generate response."
+            
+        except Exception as e:
+            logger.error(f"Error generating Jamba response: {e}")
+            # Clean up GPU memory on error
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            raise RuntimeError(f"Text generation failed: {str(e)}")
+    
+    def _clean_response(self, response: str) -> str:
+        """Clean up common generation artifacts"""
+        # Remove thinking tags and common artifacts
+        response = response.replace("</think>", "").replace("<think>", "")
+        response = response.replace("<|im_start|>", "").replace("<|im_end|>", "")
+        response = response.replace("<|assistant|>", "").replace("<|user|>", "")
+        
+        # Remove incomplete sentences at the end
+        if '. ' in response:
+            sentences = response.split('. ')
+            if len(sentences) > 1 and len(sentences[-1].strip()) < 15:
+                response = '. '.join(sentences[:-1]) + '.'
+        
+        return response.strip()
+    
+    def __str__(self):
+        return f"JambaModel({self.model_name})"
+    
+    def __del__(self):
+        # Clean up GPU memory when object is destroyed
+        if hasattr(self, 'model'):
+            del self.model
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
 class DeepSeekModel:
     """DeepSeek-R1-Distill-Qwen-7B model implementation for CVDP benchmark"""
@@ -362,7 +542,7 @@ class DeepSeekModel:
             return ""
 
     def _beam_generation(self, inputs, max_new_tokens):
-        """Beam search generation with Phi-3.5 compatibility"""
+        """Beam search generation for better quality"""
         try:
             with torch.no_grad():
                 outputs = self.model.generate(
@@ -370,11 +550,10 @@ class DeepSeekModel:
                     attention_mask=inputs['attention_mask'],
                     max_new_tokens=max_new_tokens,
                     num_beams=3,
+                    early_stopping=True,
                     pad_token_id=self.tokenizer.eos_token_id,
                     eos_token_id=self.tokenizer.eos_token_id,
-                    length_penalty=1.2,
-                    use_cache=True,
-                    # Remove early_stopping for compatibility
+                    length_penalty=1.2
                 )
             
             input_length = inputs['input_ids'].shape[1]
@@ -427,242 +606,47 @@ class DeepSeekModel:
         
         return response
 
-class Phi35MiniModel:
-    """Microsoft Phi-3-mini-4k-instruct model implementation for efficient SLM API use"""
-    def __init__(self, model: str = "microsoft/Phi-3-mini-4k-instruct"):
-        self.model_name = model
-        self.device = "cuda" if torch.cuda.is_available() else "cpu"
-        logger.info(f"Using device: {self.device}")
-        logger.info(f"Loading {model}...")
-        
-        try:
-            self.tokenizer = AutoTokenizer.from_pretrained(model, trust_remote_code=True)
-            if self.tokenizer.pad_token is None:
-                self.tokenizer.pad_token = self.tokenizer.eos_token
-            
-            if torch.cuda.is_available():
-                self.model = AutoModelForCausalLM.from_pretrained(
-                    model,
-                    torch_dtype=torch.float16,
-                    device_map="auto",
-                    trust_remote_code=True,
-                    attn_implementation="eager"  # Force eager attention to avoid flash_attn dependency
-                )
-            else:
-                self.model = AutoModelForCausalLM.from_pretrained(
-                    model,
-                    trust_remote_code=True
-                ).to(self.device)
-            
-            logger.info(f"Phi-3.5-mini model loaded successfully on {self.device}")
-        except Exception as e:
-            logger.error(f"Failed to load Phi-3.5-mini model: {e}")
-            raise
-
-    def generate_text(self, prompt: str, max_length: int = 100, temperature: float = 0.7, top_p: float = 0.9) -> str:
-        try:
-            start_time = time.time()
-            
-            # Enhanced prompt preprocessing for Phi-3.5 format
-            processed_prompt = self._preprocess_prompt(prompt)
-            
-            inputs = self.tokenizer(processed_prompt, return_tensors="pt", padding=True, truncation=True, max_length=3584).to(self.device)  # Reduced to fit within Phi-3.5's 4k context
-            input_length = inputs['input_ids'].shape[1]
-            
-            # Phi-3.5 optimized for 4k context - balanced enhancement
-            max_new_tokens = min(max(100, max_length - input_length), 2048)  # Reduced from 20480 to 2048 for speed
-            
-            if max_new_tokens <= 0:
-                logger.warning(f"Input too long, no room for generation. Input length: {input_length}, Max length: {max_length}")
-                return "Input prompt too long for generation."
-            
-            # Try multiple generation strategies for complex prompts
-            response = self._generate_with_fallback(inputs, max_new_tokens, temperature, top_p)
-            
-            # Post-process response for JSON format if needed
-            response = self._postprocess_response(response, prompt)
-            
-            generation_time = time.time() - start_time
-            logger.info(f"Phi-3.5 generation completed in {generation_time:.2f}s")
-            
-            return response if response else "Unable to generate response."
-        except Exception as e:
-            logger.error(f"Phi-3.5 text generation failed: {str(e)}")
-            raise RuntimeError(f"Text generation failed: {str(e)}")
-
-    def _preprocess_prompt(self, prompt: str) -> str:
-        """Preprocess prompt to improve generation quality for Phi-3.5 format"""
-        # Phi-3.5 uses a specific chat template format
-        if not prompt.startswith("<|user|>"):
-            # Check if prompt requires JSON format
-            if '"response":' in prompt or '{ "response":' in prompt:
-                # Format for JSON response with Phi-3.5 chat template
-                formatted_prompt = f"<|user|>\nGenerate a JSON response as requested. {prompt}<|end|>\n<|assistant|>\n"
-            else:
-                # Standard chat format
-                formatted_prompt = f"<|user|>\n{prompt}<|end|>\n<|assistant|>\n"
-            
-            return formatted_prompt
-        
-        return prompt
-
-    def _generate_with_fallback(self, inputs, max_new_tokens, temperature, top_p):
-        """Generate with multiple fallback strategies for Phi-3.5"""
-        # Strategy 1: Standard generation with good parameters for Phi-3.5
-        response = self._single_generation(inputs, max_new_tokens, temperature, top_p, 1.1)
-        
-        if not response or len(response.strip()) < 10:
-            logger.warning("First generation attempt failed, trying with lower temperature")
-            # Strategy 2: Lower temperature for more focused output
-            response = self._single_generation(inputs, max_new_tokens, 0.4, 0.85, 1.05)
-            
-        if not response or len(response.strip()) < 10:
-            logger.warning("Second generation attempt failed, trying with beam search")
-            # Strategy 3: Beam search for quality
-            response = self._beam_generation(inputs, max_new_tokens)
-            
-        return response
-
-    def _single_generation(self, inputs, max_new_tokens, temperature, top_p, repetition_penalty=1.1):
-        """Single generation attempt optimized for Phi-3.5"""
-        try:
-            with torch.no_grad():
-                outputs = self.model.generate(
-                    inputs['input_ids'],
-                    attention_mask=inputs['attention_mask'],
-                    max_new_tokens=max_new_tokens,
-                    temperature=temperature,
-                    top_p=top_p,
-                    do_sample=temperature > 0,
-                    pad_token_id=self.tokenizer.eos_token_id,
-                    eos_token_id=self.tokenizer.eos_token_id,
-                    repetition_penalty=repetition_penalty,
-                    use_cache=True,  # Explicitly enable cache
-                    length_penalty=1.0
-                )
-            
-            input_length = inputs['input_ids'].shape[1]
-            response_tokens = outputs[0][input_length:]
-            response = self.tokenizer.decode(response_tokens, skip_special_tokens=True).strip()
-            
-            # Clean up common generation artifacts
-            response = self._clean_response(response)
-            
-            return response
-        except Exception as e:
-            logger.error(f"Phi-3.5 generation failed: {e}")
-            return ""
-
-    def _beam_generation(self, inputs, max_new_tokens):
-        """Beam search generation for Phi-3.5"""
-        try:
-            with torch.no_grad():
-                outputs = self.model.generate(
-                    inputs['input_ids'],
-                    attention_mask=inputs['attention_mask'],
-                    max_new_tokens=max_new_tokens,
-                    num_beams=3,
-                    pad_token_id=self.tokenizer.eos_token_id,
-                    eos_token_id=self.tokenizer.eos_token_id,
-                    length_penalty=1.2,
-                    repetition_penalty=1.05,
-                    use_cache=True  # Explicitly enable cache
-                )
-            
-            input_length = inputs['input_ids'].shape[1]
-            response_tokens = outputs[0][input_length:]
-            response = self.tokenizer.decode(response_tokens, skip_special_tokens=True).strip()
-            
-            return self._clean_response(response)
-        except Exception as e:
-            logger.error(f"Phi-3.5 beam generation failed: {e}")
-            return ""
-
-    def _clean_response(self, response: str) -> str:
-        """Clean up common generation artifacts for Phi-3.5"""
-        # Remove special tokens and artifacts
-        response = response.replace("<|end|>", "").replace("<|user|>", "").replace("<|assistant|>", "")
-        response = response.replace("</think>", "").replace("<think>", "")
-        
-        # Remove incomplete sentences at the end
-        if '. ' in response:
-            sentences = response.split('. ')
-            if len(sentences) > 1 and len(sentences[-1].strip()) < 15:
-                response = '. '.join(sentences[:-1]) + '.'
-                
-        return response.strip()
-
-    def _postprocess_response(self, response: str, original_prompt: str) -> str:
-        """Post-process response to ensure proper JSON format when needed for Phi-3.5"""
-        # Check if JSON format was requested
-        if '"response":' in original_prompt or '{ "response":' in original_prompt:
-            # If response already looks like valid JSON, return as-is
-            if response.strip().startswith('{"response":') and response.strip().endswith('}'):
-                return response
-                
-            # If response doesn't look like JSON, wrap it
-            if not (response.strip().startswith('{') and response.strip().endswith('}')):
-                # Clean the response and wrap in JSON
-                clean_response = response.replace('"', '\\"').replace('\n', '\\n').replace('\r', '').replace('\t', ' ')
-                
-                # Truncate very long responses to prevent JSON issues - optimized for speed
-                if len(clean_response) > 2000:  # Reduced from 8000 to 2000 for faster generation
-                    # Find a good breaking point (end of sentence)
-                    truncate_point = 2000
-                    last_period = clean_response.rfind('.', 0, truncate_point)
-                    if last_period > 1000:  # Only truncate at period if it's not too early
-                        clean_response = clean_response[:last_period + 1]
-                    else:
-                        clean_response = clean_response[:truncate_point] + "..."
-                
-                response = f'{{"response": "{clean_response}"}}'
-        
-        return response
-
 # Global model instances
 smollm_generator = None
 deepseek_generator = None
-phi35_generator = None
+nemotron_generator = None
+jamba_generator = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Load models on startup and clean up on shutdown"""
-    global smollm_generator, deepseek_generator, phi35_generator
+    global smollm_generator, deepseek_generator, nemotron_generator, jamba_generator
     
     logger.info("Starting SLM API server...")
     
-    # Initialize output file
-    initialize_output_file()
+    # Only load Jamba model - all other models disabled
     
+    # SmolLM - DISABLED to save GPU memory
+    smollm_generator = None
+    logger.info("SmolLM model DISABLED to save GPU memory")
+    
+    # DeepSeek - DISABLED to save GPU memory
+    deepseek_generator = None
+    logger.info("DeepSeek model DISABLED to save GPU memory")
+    
+    # Nemotron - DISABLED to save GPU memory (Jamba only mode)
+    nemotron_generator = None
+    logger.info("Nemotron model DISABLED to save GPU memory")
+    
+    # Jamba - ENABLED (ONLY active model)
     try:
-        logger.info("Loading SmolLM model...")
-        smollm_generator = SmolLMModel()
-        logger.info("SmolLM model loaded successfully!")
+        logger.info("Loading Jamba model...")
+        jamba_generator = JambaModel()
+        logger.info("Jamba model loaded successfully!")
     except Exception as e:
-        logger.error(f"Failed to load SmolLM model: {e}")
-        smollm_generator = None
+        logger.error(f"Failed to load Jamba model: {e}")
+        jamba_generator = None
     
-    try:
-        logger.info("Loading DeepSeek model...")
-        deepseek_generator = DeepSeekModel()
-        logger.info("DeepSeek model loaded successfully!")
-    except Exception as e:
-        logger.error(f"Failed to load DeepSeek model: {e}")
-        deepseek_generator = None
+    if jamba_generator is None:
+        logger.error("Failed to load Jamba model!")
+        raise RuntimeError("Jamba model could not be loaded")
     
-    try:
-        logger.info("Loading Phi-3.5-mini model...")
-        phi35_generator = Phi35MiniModel()
-        logger.info("Phi-3.5-mini model loaded successfully!")
-    except Exception as e:
-        logger.error(f"Failed to load Phi-3.5-mini model: {e}")
-        phi35_generator = None
-    
-    if smollm_generator is None and deepseek_generator is None and phi35_generator is None:
-        logger.error("Failed to load any models!")
-        raise RuntimeError("No models could be loaded")
-    
-    logger.info("SLM API server ready!")
+    logger.info("SLM API server ready with Jamba model!")
     yield
     
     # Cleanup
@@ -671,7 +655,7 @@ async def lifespan(app: FastAPI):
 # Initialize the FastAPI app with lifespan
 app = FastAPI(
     title="SLM API for CVDP Benchmark",
-    description="Small Language Model API server supporting SmolLM2 and DeepSeek models",
+    description="Small Language Model API server with AI21 Jamba Reasoning 3B model",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -681,7 +665,7 @@ class PromptRequest(BaseModel):
     prompt: str = Field(..., description="The input prompt for text generation")
     max_length: Optional[int] = Field(default=None, ge=1, le=32768, description="Maximum length of generated text - 10x enhanced")
     max_tokens: Optional[int] = Field(default=None, ge=1, le=32768, description="Maximum tokens to generate (alias for max_length) - 10x enhanced")
-    model: Optional[str] = Field(default="smollm", description="Model to use: 'smollm', 'deepseek', or 'phi35'")
+    model: Optional[str] = Field(default="jamba", description="Model to use: 'jamba' (primary/only active), 'nemotron' (disabled), 'smollm' (disabled), or 'deepseek' (disabled)")
     temperature: Optional[float] = Field(default=0.7, ge=0.0, le=2.0, description="Sampling temperature")
     top_p: Optional[float] = Field(default=0.9, ge=0.0, le=1.0, description="Top-p sampling parameter")
     
@@ -708,8 +692,6 @@ class ErrorResponse(BaseModel):
 @app.get("/", response_model=Dict[str, Any])
 def read_root():
     """Get API status and available models"""
-    start_time = time.time()
-    
     models = []
     
     if smollm_generator:
@@ -728,37 +710,32 @@ def read_root():
             "status": "available"
         })
     
-    if phi35_generator:
+    if nemotron_generator:
         models.append({
-            "name": phi35_generator.model_name,
-            "type": "Phi-3-mini-4k-instruct",
-            "device": phi35_generator.device,
+            "name": nemotron_generator.model_name,
+            "type": "NVIDIA-Nemotron-Mini-4B",
+            "device": nemotron_generator.device,
             "status": "available"
         })
     
-    response = {
+    if jamba_generator:
+        models.append({
+            "name": jamba_generator.model_name,
+            "type": "AI21-Jamba-Reasoning-3B",
+            "device": jamba_generator.device,
+            "status": "available"
+        })
+    
+    return {
         "status": "SLM API is running",
         "version": "1.0.0",
         "models": models,
         "endpoints": ["/", "/model_info", "/generate", "/health"]
     }
-    
-    # Log API call
-    duration = time.time() - start_time
-    log_api_call(
-        endpoint="GET /",
-        request_data={},
-        response_data=response,
-        duration=duration
-    )
-    
-    return response
 
 @app.get("/model_info", response_model=Dict[str, Any])
 def get_model_info():
     """Get detailed model information"""
-    start_time = time.time()
-    
     info = {}
     
     if smollm_generator:
@@ -781,56 +758,48 @@ def get_model_info():
     else:
         info["deepseek"] = {"status": "unavailable", "error": "Model failed to load"}
     
-    if phi35_generator:
-        info["phi35"] = {
-            "model_name": phi35_generator.model_name,
-            "device": phi35_generator.device,
-            "model_type": "Phi-3-mini-4k-instruct",
+    if nemotron_generator:
+        info["nemotron"] = {
+            "model_name": nemotron_generator.model_name,
+            "device": nemotron_generator.device,
+            "model_type": "NVIDIA-Nemotron-Mini-4B",
             "status": "available"
         }
     else:
-        info["phi35"] = {"status": "unavailable", "error": "Model failed to load"}
+        info["nemotron"] = {"status": "unavailable", "error": "Model failed to load"}
     
-    # Log API call
-    duration = time.time() - start_time
-    log_api_call(
-        endpoint="GET /model_info",
-        request_data={},
-        response_data=info,
-        duration=duration
-    )
+    if jamba_generator:
+        info["jamba"] = {
+            "model_name": jamba_generator.model_name,
+            "device": jamba_generator.device,
+            "model_type": "AI21-Jamba-Reasoning-3B",
+            "status": "available",
+            "context_length": "256k tokens",
+            "architecture": "Hybrid Transformer-Mamba"
+        }
+    else:
+        info["jamba"] = {"status": "unavailable", "error": "Model disabled or failed to load"}
     
     return info
 
 @app.get("/health")
 def health_check():
     """Health check endpoint"""
-    start_time = time.time()
-    
     available_models = []
     if smollm_generator:
         available_models.append("smollm")
     if deepseek_generator:
         available_models.append("deepseek")
-    if phi35_generator:
-        available_models.append("phi35")
+    if nemotron_generator:
+        available_models.append("nemotron")
+    if jamba_generator:
+        available_models.append("jamba")
     
-    response = {
+    return {
         "status": "healthy" if available_models else "unhealthy",
         "available_models": available_models,
         "timestamp": time.time()
     }
-    
-    # Log API call
-    duration = time.time() - start_time
-    log_api_call(
-        endpoint="GET /health",
-        request_data={},
-        response_data=response,
-        duration=duration
-    )
-    
-    return response
 
 @app.post("/generate", response_model=GenerationResponse, responses={
     400: {"model": ErrorResponse, "description": "Bad Request"},
@@ -842,9 +811,9 @@ def generate_text(request: PromptRequest):
     Generate text using the specified model.
     
     - **prompt**: The input text prompt
-    - **max_length**: Maximum length of generated response (1-40960)
-    - **max_tokens**: Alternative parameter name for max_length (1-40960)
-    - **model**: Model to use ('smollm', 'deepseek', or 'phi35')
+    - **max_length**: Maximum length of generated response (1-32768)
+    - **max_tokens**: Alternative parameter name for max_length (1-32768)
+    - **model**: Model to use ('smollm', 'deepseek', 'nemotron', or 'jamba')
     - **temperature**: Sampling temperature (0.0-2.0)
     - **top_p**: Top-p sampling parameter (0.0-1.0)
     
@@ -852,28 +821,10 @@ def generate_text(request: PromptRequest):
     """
     start_time = time.time()
     
-    # Convert request to dict for logging
-    request_data = {
-        "prompt": request.prompt,
-        "max_length": request.max_length,
-        "max_tokens": request.max_tokens,
-        "model": request.model,
-        "temperature": request.temperature,
-        "top_p": request.top_p
-    }
-    
     try:
         # Validate model availability
         if request.model == "deepseek":
             if deepseek_generator is None:
-                error_response = {"error": "DeepSeek model is not available", "model": request.model}
-                duration = time.time() - start_time
-                log_api_call(
-                    endpoint="POST /generate",
-                    request_data=request_data,
-                    response_data=error_response,
-                    duration=duration
-                )
                 raise HTTPException(
                     status_code=503,
                     detail="DeepSeek model is not available"
@@ -881,58 +832,33 @@ def generate_text(request: PromptRequest):
             generator = deepseek_generator
         elif request.model == "smollm":
             if smollm_generator is None:
-                error_response = {"error": "SmolLM model is not available", "model": request.model}
-                duration = time.time() - start_time
-                log_api_call(
-                    endpoint="POST /generate",
-                    request_data=request_data,
-                    response_data=error_response,
-                    duration=duration
-                )
                 raise HTTPException(
                     status_code=503,
                     detail="SmolLM model is not available"
                 )
             generator = smollm_generator
-        elif request.model == "phi35":
-            if phi35_generator is None:
-                error_response = {"error": "Phi-3.5-mini model is not available", "model": request.model}
-                duration = time.time() - start_time
-                log_api_call(
-                    endpoint="POST /generate",
-                    request_data=request_data,
-                    response_data=error_response,
-                    duration=duration
-                )
+        elif request.model == "nemotron":
+            if nemotron_generator is None:
                 raise HTTPException(
                     status_code=503,
-                    detail="Phi-3.5-mini model is not available"
+                    detail="Nemotron model is not available"
                 )
-            generator = phi35_generator
+            generator = nemotron_generator
+        elif request.model == "jamba":
+            if jamba_generator is None:
+                raise HTTPException(
+                    status_code=503,
+                    detail="Jamba model is not available"
+                )
+            generator = jamba_generator
         else:
-            error_response = {"error": f"Unsupported model: {request.model}. Use 'smollm', 'deepseek', or 'phi35'"}
-            duration = time.time() - start_time
-            log_api_call(
-                endpoint="POST /generate",
-                request_data=request_data,
-                response_data=error_response,
-                duration=duration
-            )
             raise HTTPException(
                 status_code=400,
-                detail=f"Unsupported model: {request.model}. Use 'smollm', 'deepseek', or 'phi35'"
+                detail=f"Unsupported model: {request.model}. Use 'smollm', 'deepseek', 'nemotron', or 'jamba'"
             )
         
         # Validate prompt
         if not request.prompt or not request.prompt.strip():
-            error_response = {"error": "Prompt cannot be empty"}
-            duration = time.time() - start_time
-            log_api_call(
-                endpoint="POST /generate",
-                request_data=request_data,
-                response_data=error_response,
-                duration=duration
-            )
             raise HTTPException(
                 status_code=400,
                 detail="Prompt cannot be empty"
@@ -960,56 +886,20 @@ def generate_text(request: PromptRequest):
         logger.info(f"Generation successful - Time: {generation_time:.2f}s, "
                    f"Tokens: {tokens_generated}, Model: {request.model}")
         
-        response = GenerationResponse(
+        return GenerationResponse(
             response=generated_text,
             model=request.model,
             generation_time=generation_time,
             tokens_generated=tokens_generated
         )
         
-        # Convert response to dict for logging
-        response_data = {
-            "response": generated_text,
-            "model": request.model,
-            "generation_time": generation_time,
-            "tokens_generated": tokens_generated
-        }
-        
-        # Log successful API call
-        log_api_call(
-            endpoint="POST /generate",
-            request_data=request_data,
-            response_data=response_data,
-            duration=generation_time
-        )
-        
-        return response
-        
-    except HTTPException as e:
-        # Log HTTP exceptions
-        duration = time.time() - start_time
-        error_response = {"error": str(e.detail), "status_code": e.status_code}
-        log_api_call(
-            endpoint="POST /generate",
-            request_data=request_data,
-            response_data=error_response,
-            duration=duration
-        )
+    except HTTPException:
         # Re-raise HTTP exceptions
         raise
     except Exception as e:
         # Log detailed error information
         logger.error(f"Generation failed for model {request.model}: {str(e)}")
         logger.error(f"Traceback: {traceback.format_exc()}")
-        
-        duration = time.time() - start_time
-        error_response = {"error": f"Text generation failed: {str(e)}", "model": request.model}
-        log_api_call(
-            endpoint="POST /generate",
-            request_data=request_data,
-            response_data=error_response,
-            duration=duration
-        )
         
         # Return structured error response
         raise HTTPException(
@@ -1021,57 +911,29 @@ def generate_text(request: PromptRequest):
 @app.post("/test")
 def test_generation():
     """Simple test endpoint for debugging"""
-    start_time = time.time()
-    request_data = {"endpoint": "/test", "description": "Simple test generation"}
-    
     try:
         test_request = PromptRequest(
             prompt="Hello, how are you?",
-            max_length=50,
-            model="smollm"
+            max_length=100,
+            model="nemotron"
         )
-        result = generate_text(test_request)
-        
-        # Note: generate_text already logs its own call, so we just return the result
-        return result
+        return generate_text(test_request)
     except Exception as e:
-        duration = time.time() - start_time
-        error_response = {"error": f"Test failed: {str(e)}"}
-        log_api_call(
-            endpoint="POST /test",
-            request_data=request_data,
-            response_data=error_response,
-            duration=duration
-        )
-        return error_response
+        return {"error": f"Test failed: {str(e)}"}
 
 @app.post("/test_json")
 def test_json_generation():
     """Test endpoint for JSON format responses"""
-    start_time = time.time()
-    request_data = {"endpoint": "/test_json", "description": "JSON format test"}
-    
     try:
         test_request = PromptRequest(
             prompt='Answer this question in JSON format: { "response": "your answer" } Why is testing circular shifts important?',
-            max_length=200,
-            model="deepseek",
+            max_length=500,
+            model="nemotron",
             temperature=0.4
         )
-        result = generate_text(test_request)
-        
-        # Note: generate_text already logs its own call, so we just return the result
-        return result
+        return generate_text(test_request)
     except Exception as e:
-        duration = time.time() - start_time
-        error_response = {"error": f"JSON test failed: {str(e)}"}
-        log_api_call(
-            endpoint="POST /test_json",
-            request_data=request_data,
-            response_data=error_response,
-            duration=duration
-        )
-        return error_response
+        return {"error": f"JSON test failed: {str(e)}"}
 
 @app.post("/test_complex")
 def test_complex_prompt():
@@ -1083,13 +945,27 @@ Question: Explain in four sentences why testing circular shifts with shift_bits 
         
         test_request = PromptRequest(
             prompt=complex_prompt,
-            max_length=8000,  # 10x enhanced: was 800, now 8000
-            model="deepseek",
+            max_length=800,
+            model="nemotron",
             temperature=0.3
         )
         return generate_text(test_request)
     except Exception as e:
         return {"error": f"Complex test failed: {str(e)}"}
+
+@app.post("/test_nemotron")
+def test_nemotron():
+    """Test endpoint for Nemotron model"""
+    try:
+        test_request = PromptRequest(
+            prompt="Explain the importance of artificial intelligence in modern technology.",
+            max_length=500,
+            model="nemotron",
+            temperature=0.7
+        )
+        return generate_text(test_request)
+    except Exception as e:
+        return {"error": f"Nemotron test failed: {str(e)}"}
 
 @app.post("/test_long")
 def test_long_response():
@@ -1109,69 +985,13 @@ Question: Explain comprehensively why testing circular shifts with shift_bits = 
     except Exception as e:
         return {"error": f"Long response test failed: {str(e)}"}
 
-@app.post("/test_phi35")
-def test_phi35_generation():
-    """Test endpoint specifically for Phi-3.5-mini model"""
-    start_time = time.time()
-    request_data = {"endpoint": "/test_phi35", "description": "Phi-3.5-mini model test"}
-    
-    try:
-        test_request = PromptRequest(
-            prompt="Explain the key advantages of Microsoft's Phi-3.5-mini model for edge deployment.",
-            max_length=300,
-            model="phi35",
-            temperature=0.6
-        )
-        result = generate_text(test_request)
-        
-        # Note: generate_text already logs its own call, so we just return the result
-        return result
-    except Exception as e:
-        duration = time.time() - start_time
-        error_response = {"error": f"Phi-3.5 test failed: {str(e)}"}
-        log_api_call(
-            endpoint="POST /test_phi35",
-            request_data=request_data,
-            response_data=error_response,
-            duration=duration
-        )
-        return error_response
-
-@app.post("/test_phi35_json")
-def test_phi35_json_generation():
-    """Test endpoint for Phi-3.5 JSON format responses"""
-    start_time = time.time()
-    request_data = {"endpoint": "/test_phi35_json", "description": "Phi-3.5 JSON format test"}
-    
-    try:
-        test_request = PromptRequest(
-            prompt='Answer this question in JSON format: { "response": "your answer" } What are the main features of the Phi-3.5-mini model architecture?',
-            max_length=400,
-            model="phi35",
-            temperature=0.4
-        )
-        result = generate_text(test_request)
-        
-        # Note: generate_text already logs its own call, so we just return the result
-        return result
-    except Exception as e:
-        duration = time.time() - start_time
-        error_response = {"error": f"Phi-3.5 JSON test failed: {str(e)}"}
-        log_api_call(
-            endpoint="POST /test_phi35_json",
-            request_data=request_data,
-            response_data=error_response,
-            duration=duration
-        )
-        return error_response
-
 if __name__ == "__main__":
     import uvicorn
     
     # Run the server
     logger.info("Starting SLM API server...")
     uvicorn.run(
-        "main:app",  # Fixed: was "slm_api_code:app", now "main:app"
+        "slm_api_code:app",
         host="0.0.0.0",
         port=8000,
         log_level="info",

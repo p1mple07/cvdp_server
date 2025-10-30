@@ -1,0 +1,221 @@
+nohup: ignoring input
+INFO:     Started server process [3203821]
+INFO:     Waiting for application startup.
+INFO:main:Starting SLM API server...
+INFO:main:SmolLM model DISABLED to save GPU memory
+INFO:main:DeepSeek model DISABLED to save GPU memory
+INFO:main:Loading GPT OSS model...
+INFO:main:Using device: cuda
+INFO:main:Loading microsoft/DialoGPT-large...
+INFO:accelerate.utils.modeling:We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
+INFO:main:GPT OSS model loaded successfully on cuda
+INFO:main:GPT OSS model loaded successfully!
+INFO:main:SLM API server ready!
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:main:Generation request - Model: gptoss, Max length: 4096, Temperature: 0.7, Top-p: 0.9
+ERROR:main:GPT OSS generation failed on GPU with CUDA error: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+ERROR:main:GPT OSS text generation failed: GPU generation failed with a CUDA error. Server is configured to use GPU-only for GPT OSS. Check input tokens, model compatibility, and CUDA memory. Consider restarting the process or setting environment variables for debugging (e.g., CUDA_LAUNCH_BLOCKING=1).
+ERROR:main:Generation failed for model gptoss: Text generation failed: GPU generation failed with a CUDA error. Server is configured to use GPU-only for GPT OSS. Check input tokens, model compatibility, and CUDA memory. Consider restarting the process or setting environment variables for debugging (e.g., CUDA_LAUNCH_BLOCKING=1).
+ERROR:main:Traceback: Traceback (most recent call last):
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 323, in _single_generation
+    outputs = self.model.generate(
+              ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/torch/utils/_contextlib.py", line 120, in decorate_context
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/generation/utils.py", line 2024, in generate
+    result = self._sample(
+             ^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/generation/utils.py", line 2982, in _sample
+    outputs = self(**model_inputs, return_dict=True)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 1315, in forward
+    transformer_outputs = self.transformer(
+                          ^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1773, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1784, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/models/gpt2/modeling_gpt2.py", line 1037, in forward
+    attention_mask = _prepare_4d_causal_attention_mask_for_sdpa(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/modeling_attn_mask_utils.py", line 372, in _prepare_4d_causal_attention_mask_for_sdpa
+    ignore_causal_mask = AttentionMaskConverter._ignore_causal_mask_sdpa(
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/modeling_attn_mask_utils.py", line 279, in _ignore_causal_mask_sdpa
+    elif (is_training or not is_tracing) and torch.all(attention_mask == 1):
+                                                       ^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 276, in generate_text
+    response = self._generate_with_fallback(inputs, max_new_tokens, temperature, top_p)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 304, in _generate_with_fallback
+    response = self._single_generation(inputs, max_new_tokens, temperature, top_p, 1.1)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 347, in _single_generation
+    raise RuntimeError(
+RuntimeError: GPU generation failed with a CUDA error. Server is configured to use GPU-only for GPT OSS. Check input tokens, model compatibility, and CUDA memory. Consider restarting the process or setting environment variables for debugging (e.g., CUDA_LAUNCH_BLOCKING=1).
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 880, in generate_text
+    generated_text = generator.generate_text(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 287, in generate_text
+    raise RuntimeError(f"Text generation failed: {str(e)}")
+RuntimeError: Text generation failed: GPU generation failed with a CUDA error. Server is configured to use GPU-only for GPT OSS. Check input tokens, model compatibility, and CUDA memory. Consider restarting the process or setting environment variables for debugging (e.g., CUDA_LAUNCH_BLOCKING=1).
+
+INFO:     127.0.0.1:47992 - "POST /generate HTTP/1.1" 500 Internal Server Error
+INFO:main:Generation request - Model: gptoss, Max length: 4096, Temperature: 0.7, Top-p: 0.9
+ERROR:main:GPT OSS text generation failed: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+ERROR:main:Generation failed for model gptoss: Text generation failed: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+ERROR:main:Traceback: Traceback (most recent call last):
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 265, in generate_text
+    inputs = self.tokenizer(processed_prompt, return_tensors="pt", padding=True, truncation=True, max_length=4096).to(self.device)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/tokenization_utils_base.py", line 803, in to
+    self.data = {k: v.to(device=device) for k, v in self.data.items() if v is not None}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/tokenization_utils_base.py", line 803, in <dictcomp>
+    self.data = {k: v.to(device=device) for k, v in self.data.items() if v is not None}
+                    ^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 880, in generate_text
+    generated_text = generator.generate_text(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 287, in generate_text
+    raise RuntimeError(f"Text generation failed: {str(e)}")
+RuntimeError: Text generation failed: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+INFO:     127.0.0.1:47998 - "POST /generate HTTP/1.1" 500 Internal Server Error
+INFO:main:Generation request - Model: gptoss, Max length: 4096, Temperature: 0.7, Top-p: 0.9
+ERROR:main:GPT OSS text generation failed: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+ERROR:main:Generation failed for model gptoss: Text generation failed: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+ERROR:main:Traceback: Traceback (most recent call last):
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 265, in generate_text
+    inputs = self.tokenizer(processed_prompt, return_tensors="pt", padding=True, truncation=True, max_length=4096).to(self.device)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/tokenization_utils_base.py", line 803, in to
+    self.data = {k: v.to(device=device) for k, v in self.data.items() if v is not None}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/tokenization_utils_base.py", line 803, in <dictcomp>
+    self.data = {k: v.to(device=device) for k, v in self.data.items() if v is not None}
+                    ^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 880, in generate_text
+    generated_text = generator.generate_text(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 287, in generate_text
+    raise RuntimeError(f"Text generation failed: {str(e)}")
+RuntimeError: Text generation failed: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+INFO:     127.0.0.1:48002 - "POST /generate HTTP/1.1" 500 Internal Server Error
+INFO:main:Generation request - Model: gptoss, Max length: 4096, Temperature: 0.7, Top-p: 0.9
+ERROR:main:GPT OSS text generation failed: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+ERROR:main:Generation failed for model gptoss: Text generation failed: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+ERROR:main:Traceback: Traceback (most recent call last):
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 265, in generate_text
+    inputs = self.tokenizer(processed_prompt, return_tensors="pt", padding=True, truncation=True, max_length=4096).to(self.device)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/tokenization_utils_base.py", line 803, in to
+    self.data = {k: v.to(device=device) for k, v in self.data.items() if v is not None}
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/flask_venv/lib/python3.11/site-packages/transformers/tokenization_utils_base.py", line 803, in <dictcomp>
+    self.data = {k: v.to(device=device) for k, v in self.data.items() if v is not None}
+                    ^^^^^^^^^^^^^^^^^^^
+torch.AcceleratorError: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 880, in generate_text
+    generated_text = generator.generate_text(
+                     ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/ckarfa/siang_btp/slm_api/main.py", line 287, in generate_text
+    raise RuntimeError(f"Text generation failed: {str(e)}")
+RuntimeError: Text generation failed: CUDA error: device-side assert triggered
+CUDA kernel errors might be asynchronously reported at some other API call, so the stacktrace below might be incorrect.
+For debugging consider passing CUDA_LAUNCH_BLOCKING=1
+Compile with `TORCH_USE_CUDA_DSA` to enable device-side assertions.
+
+
+INFO:     127.0.0.1:48016 - "POST /generate HTTP/1.1" 500 Internal Server Error
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:main:Shutting down SLM API server...
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3203821]
