@@ -414,6 +414,13 @@ class DeepSeekModel:
         logger.info(f"Using device: {self.device}")
         logger.info(f"Loading {model}...")
         
+        # Check GPU memory if available
+        if torch.cuda.is_available():
+            gpu_memory_gb = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+            logger.info(f"GPU memory available: {gpu_memory_gb:.1f} GB")
+            if gpu_memory_gb < 14:
+                logger.warning(f"DeepSeek-R1-Distill-Qwen-7B may require significant GPU memory. Available: {gpu_memory_gb:.1f} GB")
+        
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(model, trust_remote_code=True)
         except Exception as e:
@@ -439,81 +446,60 @@ class DeepSeekModel:
                     device_map="auto",
                     trust_remote_code=True
                 )
+                logger.info(f"DeepSeek model loaded successfully on GPU with device_map=auto")
             else:
                 self.model = AutoModelForCausalLM.from_pretrained(
                     model,
-                    trust_remote_code=True
+                    trust_remote_code=True,
+                    torch_dtype=torch.float32
                 ).to(self.device)
+                logger.info(f"DeepSeek model loaded successfully on CPU")
             
-            logger.info(f"DeepSeek model loaded successfully on {self.device}")
         except Exception as e:
             logger.error(f"Failed to load DeepSeek model: {e}")
             raise
 
     def generate_text(self, prompt: str, max_length: int = 100, temperature: float = 0.7, top_p: float = 0.9) -> str:
+        """
+        Generate response using DeepSeek model - keeps original prompt unchanged
+        """
         try:
             start_time = time.time()
             
-            # Enhanced prompt preprocessing with 10x improvements for DeepSeek
-            processed_prompt = self._preprocess_prompt(prompt)
+            # Add code-only instruction to prompt
+            prompt = f"{prompt}\n\nIMPORTANT: Provide ONLY the code without any explanations, markdown formatting, or additional text."
             
-            inputs = self.tokenizer(processed_prompt, return_tensors="pt", padding=True, truncation=True, max_length=16384).to(self.device)  # 4x increase: was 4096, now 16384
+            # Use chat template if available
+            try:
+                messages = [{"role": "user", "content": prompt}]
+                formatted_prompt = self.tokenizer.apply_chat_template(
+                    messages, 
+                    tokenize=False, 
+                    add_generation_prompt=True
+                )
+                inputs = self.tokenizer(formatted_prompt, return_tensors="pt", padding=True)
+                logger.info("Using chat template for DeepSeek")
+            except:
+                # Fallback to direct tokenization if chat template not available
+                inputs = self.tokenizer(prompt, return_tensors="pt", padding=True)
+                logger.info("Using direct tokenization for DeepSeek")
+            
+            # Move inputs to device
+            if hasattr(self.model, 'device'):
+                inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
+            else:
+                inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            
             input_length = inputs['input_ids'].shape[1]
             
-            # Ensure we generate much longer responses for DeepSeek - 10x enhancement
-            max_new_tokens = min(max(300, max_length - input_length), 30720)  # 10x increased: was 3072, now 30720
+            # Calculate max_new_tokens - increased for longer code generation
+            max_new_tokens = min(max(500, max_length - input_length), 8192)  # Increased from 2000 to 8192
             
             if max_new_tokens <= 0:
-                logger.warning(f"Input too long, no room for generation. Input length: {input_length}, Max length: {max_length}")
+                logger.warning(f"Input too long. Input length: {input_length}, Max length: {max_length}")
                 return "Input prompt too long for generation."
             
-            # Try multiple generation strategies for complex prompts
-            response = self._generate_with_fallback(inputs, max_new_tokens, temperature, top_p)
-            
-            # Post-process response for JSON format if needed
-            response = self._postprocess_response(response, prompt)
-            
-            generation_time = time.time() - start_time
-            logger.info(f"DeepSeek generation completed in {generation_time:.2f}s")
-            
-            return response if response else "Unable to generate response."
-        except Exception as e:
-            logger.error(f"DeepSeek text generation failed: {str(e)}")
-            raise RuntimeError(f"Text generation failed: {str(e)}")
-
-    def _preprocess_prompt(self, prompt: str) -> str:
-        """Preprocess prompt with 10x enhancement to improve generation quality for complex prompts"""
-        # Check if prompt requires JSON format - enhanced instruction
-        if '"response":' in prompt or '{ "response":' in prompt:
-            # Add comprehensive instruction for JSON format with extensive detail
-            prompt = f"You must respond in valid JSON format exactly as requested with comprehensive, detailed, thorough technical explanation. Provide extensive detail and complete analysis. {prompt}\n\nProvide comprehensive JSON Response with extensive technical detail:"
-        
-        # Handle technical prompts by adding comprehensive instruction - enhanced
-        if len(prompt) > 200 and any(term in prompt.lower() for term in ["barrel shifter", "testing", "circular shift", "verification", "lfsr", "hardware", "explain", "describe"]):
-            prompt = f"Provide a comprehensive, detailed technical explanation with extensive coverage, multiple examples, step-by-step analysis, and thorough examination of all concepts.\n\n{prompt}\n\nProvide very detailed, comprehensive technical analysis."
-            
-        return prompt
-
-    def _generate_with_fallback(self, inputs, max_new_tokens, temperature, top_p):
-        """Generate with multiple fallback strategies"""
-        # Strategy 1: Standard generation with repetition penalty
-        response = self._single_generation(inputs, max_new_tokens, temperature, top_p, 1.2)
-        
-        if not response or len(response.strip()) < 10:
-            logger.warning("First generation attempt failed, trying with lower temperature")
-            # Strategy 2: Lower temperature, less repetition penalty
-            response = self._single_generation(inputs, max_new_tokens, 0.4, 0.85, 1.1)
-            
-        if not response or len(response.strip()) < 10:
-            logger.warning("Second generation attempt failed, trying with beam search")
-            # Strategy 3: Beam search
-            response = self._beam_generation(inputs, max_new_tokens)
-            
-        return response
-
-    def _single_generation(self, inputs, max_new_tokens, temperature, top_p, repetition_penalty=1.1):
-        """Single generation attempt with specified parameters"""
-        try:
+            # Generate response
             with torch.no_grad():
                 outputs = self.model.generate(
                     inputs['input_ids'],
@@ -522,89 +508,50 @@ class DeepSeekModel:
                     temperature=temperature,
                     top_p=top_p,
                     do_sample=temperature > 0,
-                    pad_token_id=self.tokenizer.eos_token_id,
-                    eos_token_id=self.tokenizer.eos_token_id,
-                    repetition_penalty=repetition_penalty,
-                    early_stopping=True,
-                    length_penalty=1.0
+                    pad_token_id=self.tokenizer.pad_token_id,
+                    eos_token_id=self.tokenizer.eos_token_id
                 )
             
-            input_length = inputs['input_ids'].shape[1]
+            # Decode only new tokens
             response_tokens = outputs[0][input_length:]
             response = self.tokenizer.decode(response_tokens, skip_special_tokens=True).strip()
             
-            # Clean up common generation artifacts
-            response = self._clean_response(response)
+            # Clean up response - remove common artifacts
+            if response.startswith("assistant"):
+                response = response[len("assistant"):].strip()
             
-            return response
+            response = response.replace("</think>", "").replace("<think>", "")
+            response = response.replace("<|im_start|>", "").replace("<|im_end|>", "")
+            
+            # Remove markdown code blocks if present
+            if "```" in response:
+                # Extract code from markdown blocks
+                import re
+                code_blocks = re.findall(r'```(?:\w+)?\n?(.*?)```', response, re.DOTALL)
+                if code_blocks:
+                    response = code_blocks[0].strip()
+                else:
+                    # Remove the backticks if pattern didn't match
+                    response = response.replace("```", "").strip()
+            
+            generation_time = time.time() - start_time
+            logger.info(f"DeepSeek generation completed in {generation_time:.2f}s, generated {len(response_tokens)} tokens")
+            
+            return response if response else "Unable to generate response."
+            
         except Exception as e:
-            logger.error(f"Generation failed: {e}")
-            return ""
-
-    def _beam_generation(self, inputs, max_new_tokens):
-        """Beam search generation for better quality"""
-        try:
-            with torch.no_grad():
-                outputs = self.model.generate(
-                    inputs['input_ids'],
-                    attention_mask=inputs['attention_mask'],
-                    max_new_tokens=max_new_tokens,
-                    num_beams=3,
-                    early_stopping=True,
-                    pad_token_id=self.tokenizer.eos_token_id,
-                    eos_token_id=self.tokenizer.eos_token_id,
-                    length_penalty=1.2
-                )
-            
-            input_length = inputs['input_ids'].shape[1]
-            response_tokens = outputs[0][input_length:]
-            response = self.tokenizer.decode(response_tokens, skip_special_tokens=True).strip()
-            
-            return self._clean_response(response)
-        except Exception as e:
-            logger.error(f"Beam generation failed: {e}")
-            return ""
-
-    def _clean_response(self, response: str) -> str:
-        """Clean up common generation artifacts"""
-        # Remove thinking tags and artifacts
-        response = response.replace("</think>", "").replace("<think>", "")
-        response = response.replace("<|im_start|>", "").replace("<|im_end|>", "")
-        
-        # Remove incomplete sentences at the end
-        if '. ' in response:
-            sentences = response.split('. ')
-            if len(sentences) > 1 and len(sentences[-1].strip()) < 15:
-                response = '. '.join(sentences[:-1]) + '.'
-                
-        return response.strip()
-
-    def _postprocess_response(self, response: str, original_prompt: str) -> str:
-        """Post-process response to ensure proper JSON format when needed"""
-        # Check if JSON format was requested
-        if '"response":' in original_prompt or '{ "response":' in original_prompt:
-            # If response already looks like valid JSON, return as-is
-            if response.strip().startswith('{"response":') and response.strip().endswith('}'):
-                return response
-                
-            # If response doesn't look like JSON, wrap it
-            if not (response.strip().startswith('{') and response.strip().endswith('}')):
-                # Clean the response and wrap in JSON
-                clean_response = response.replace('"', '\\"').replace('\n', '\\n').replace('\r', '').replace('\t', ' ')
-                
-                # Allow very long responses for DeepSeek - 10x enhancement
-                if len(clean_response) > 30000:  # 10x increased: was 3000, now 30000
-                    # Find a good breaking point (end of sentence)
-                    truncate_point = 30000
-                    last_period = clean_response.rfind('.', 0, truncate_point)
-                    if last_period > 15000:  # Only truncate at period if it's not too early - 10x increased
-                        clean_response = clean_response[:last_period + 1]
-                    else:
-                        clean_response = clean_response[:truncate_point] + "..."
-                
-                response = f'{{"response": "{clean_response}"}}'
-        
-        return response
+            logger.error(f"DeepSeek text generation failed: {str(e)}")
+            raise RuntimeError(f"Text generation failed: {str(e)}")
+    
+    def __str__(self):
+        return f"DeepSeekModel({self.model_name})"
+    
+    def __del__(self):
+        # Clean up GPU memory when object is destroyed
+        if hasattr(self, 'model'):
+            del self.model
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
 
 # Global model instances
 smollm_generator = None
@@ -619,34 +566,34 @@ async def lifespan(app: FastAPI):
     
     logger.info("Starting SLM API server...")
     
-    # Only load Jamba model - all other models disabled
+    # Only load DeepSeek model - all other models disabled
     
     # SmolLM - DISABLED to save GPU memory
     smollm_generator = None
     logger.info("SmolLM model DISABLED to save GPU memory")
     
-    # DeepSeek - DISABLED to save GPU memory
-    deepseek_generator = None
-    logger.info("DeepSeek model DISABLED to save GPU memory")
+    # DeepSeek - ENABLED (ONLY active model)
+    try:
+        logger.info("Loading DeepSeek model...")
+        deepseek_generator = DeepSeekModel()
+        logger.info("DeepSeek model loaded successfully!")
+    except Exception as e:
+        logger.error(f"Failed to load DeepSeek model: {e}")
+        deepseek_generator = None
     
-    # Nemotron - DISABLED to save GPU memory (Jamba only mode)
+    # Nemotron - DISABLED to save GPU memory
     nemotron_generator = None
     logger.info("Nemotron model DISABLED to save GPU memory")
     
-    # Jamba - ENABLED (ONLY active model)
-    try:
-        logger.info("Loading Jamba model...")
-        jamba_generator = JambaModel()
-        logger.info("Jamba model loaded successfully!")
-    except Exception as e:
-        logger.error(f"Failed to load Jamba model: {e}")
-        jamba_generator = None
+    # Jamba - DISABLED to save GPU memory (DeepSeek only mode)
+    jamba_generator = None
+    logger.info("Jamba model DISABLED to save GPU memory")
     
-    if jamba_generator is None:
-        logger.error("Failed to load Jamba model!")
-        raise RuntimeError("Jamba model could not be loaded")
+    if deepseek_generator is None:
+        logger.error("Failed to load DeepSeek model!")
+        raise RuntimeError("DeepSeek model could not be loaded")
     
-    logger.info("SLM API server ready with Jamba model!")
+    logger.info("SLM API server ready with DeepSeek model!")
     yield
     
     # Cleanup
@@ -655,7 +602,7 @@ async def lifespan(app: FastAPI):
 # Initialize the FastAPI app with lifespan
 app = FastAPI(
     title="SLM API for CVDP Benchmark",
-    description="Small Language Model API server with AI21 Jamba Reasoning 3B model",
+    description="Small Language Model API server with DeepSeek-R1-Distill-Qwen-7B model",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -665,7 +612,7 @@ class PromptRequest(BaseModel):
     prompt: str = Field(..., description="The input prompt for text generation")
     max_length: Optional[int] = Field(default=None, ge=1, le=32768, description="Maximum length of generated text - 10x enhanced")
     max_tokens: Optional[int] = Field(default=None, ge=1, le=32768, description="Maximum tokens to generate (alias for max_length) - 10x enhanced")
-    model: Optional[str] = Field(default="jamba", description="Model to use: 'jamba' (primary/only active), 'nemotron' (disabled), 'smollm' (disabled), or 'deepseek' (disabled)")
+    model: Optional[str] = Field(default="deepseek", description="Model to use: 'deepseek' (primary/only active), 'jamba' (disabled), 'nemotron' (disabled), or 'smollm' (disabled)")
     temperature: Optional[float] = Field(default=0.7, ge=0.0, le=2.0, description="Sampling temperature")
     top_p: Optional[float] = Field(default=0.9, ge=0.0, le=1.0, description="Top-p sampling parameter")
     
@@ -676,7 +623,7 @@ class PromptRequest(BaseModel):
         elif self.max_length is not None:
             return self.max_length
         else:
-            return 10240  # 10x enhanced default: was 1024, now 10240
+            return 8192  # Increased default for longer code generation (was 10240)
 
 class GenerationResponse(BaseModel):
     response: str = Field(..., description="Generated text response")
@@ -854,7 +801,7 @@ def generate_text(request: PromptRequest):
         else:
             raise HTTPException(
                 status_code=400,
-                detail=f"Unsupported model: {request.model}. Use 'smollm', 'deepseek', 'nemotron', or 'jamba'"
+                detail=f"Unsupported model: {request.model}. Use 'deepseek' (only active model currently)"
             )
         
         # Validate prompt
