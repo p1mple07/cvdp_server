@@ -553,47 +553,191 @@ class DeepSeekModel:
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
 
+class PhiModel:
+    """Microsoft Phi-3.5-mini-instruct model implementation for CVDP benchmark"""
+    def __init__(self, model: str = "microsoft/Phi-3.5-mini-instruct"):
+        self.model_name = model
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        logger.info(f"Using device: {self.device}")
+        logger.info(f"Loading {model}...")
+        
+        # Check GPU memory if available
+        if torch.cuda.is_available():
+            gpu_memory_gb = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+            logger.info(f"GPU memory available: {gpu_memory_gb:.1f} GB")
+        
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(model, trust_remote_code=True)
+        except Exception as e:
+            logger.error(f"Error loading tokenizer for {model}: {e}")
+            raise RuntimeError(f"Failed to load Phi model tokenizer: {e}")
+        
+        if self.tokenizer.pad_token is None:
+            self.tokenizer.pad_token = self.tokenizer.eos_token
+        
+        try:
+            if torch.cuda.is_available():
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model,
+                    torch_dtype=torch.float16,
+                    device_map="auto",
+                    trust_remote_code=True
+                )
+                logger.info(f"Phi model loaded successfully on GPU with device_map=auto")
+            else:
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model,
+                    trust_remote_code=True,
+                    torch_dtype=torch.float32
+                ).to(self.device)
+                logger.info(f"Phi model loaded successfully on CPU")
+            
+        except Exception as e:
+            logger.error(f"Failed to load Phi model: {e}")
+            raise
+
+    def generate_text(self, prompt: str, max_length: int = 100, temperature: float = 0.7, top_p: float = 0.9) -> str:
+        """
+        Generate response using Phi model
+        """
+        try:
+            start_time = time.time()
+            
+            # Add code-only instruction to prompt
+            prompt = f"{prompt}\n\nIMPORTANT: Provide ONLY the code without any explanations, markdown formatting, or additional text."
+            
+            # Use chat template if available
+            try:
+                messages = [{"role": "user", "content": prompt}]
+                formatted_prompt = self.tokenizer.apply_chat_template(
+                    messages, 
+                    tokenize=False, 
+                    add_generation_prompt=True
+                )
+                inputs = self.tokenizer(formatted_prompt, return_tensors="pt", padding=True)
+                logger.info("Using chat template for Phi")
+            except:
+                # Fallback to direct tokenization if chat template not available
+                inputs = self.tokenizer(prompt, return_tensors="pt", padding=True)
+                logger.info("Using direct tokenization for Phi")
+            
+            # Move inputs to device
+            if hasattr(self.model, 'device'):
+                inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
+            else:
+                inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            
+            input_length = inputs['input_ids'].shape[1]
+            
+            # Calculate max_new_tokens
+            max_new_tokens = min(max(500, max_length - input_length), 8192)
+            
+            if max_new_tokens <= 0:
+                logger.warning(f"Input too long. Input length: {input_length}, Max length: {max_length}")
+                return "Input prompt too long for generation."
+            
+            # Generate response
+            with torch.no_grad():
+                outputs = self.model.generate(
+                    inputs['input_ids'],
+                    attention_mask=inputs['attention_mask'],
+                    max_new_tokens=max_new_tokens,
+                    temperature=temperature,
+                    top_p=top_p,
+                    do_sample=temperature > 0,
+                    pad_token_id=self.tokenizer.pad_token_id,
+                    eos_token_id=self.tokenizer.eos_token_id,
+                    use_cache=False  # Disable cache to avoid DynamicCache compatibility issues with Phi
+                )
+            
+            # Decode only new tokens
+            response_tokens = outputs[0][input_length:]
+            response = self.tokenizer.decode(response_tokens, skip_special_tokens=True).strip()
+            
+            # Clean up response - remove common artifacts
+            if response.startswith("assistant"):
+                response = response[len("assistant"):].strip()
+            
+            response = response.replace("</think>", "").replace("<think>", "")
+            response = response.replace("<|im_start|>", "").replace("<|im_end|>", "")
+            response = response.replace("<|assistant|>", "").replace("<|user|>", "")
+            
+            # Remove markdown code blocks if present
+            if "```" in response:
+                # Extract code from markdown blocks
+                import re
+                code_blocks = re.findall(r'```(?:\w+)?\n?(.*?)```', response, re.DOTALL)
+                if code_blocks:
+                    response = code_blocks[0].strip()
+                else:
+                    # Remove the backticks if pattern didn't match
+                    response = response.replace("```", "").strip()
+            
+            generation_time = time.time() - start_time
+            logger.info(f"Phi generation completed in {generation_time:.2f}s, generated {len(response_tokens)} tokens")
+            
+            return response if response else "Unable to generate response."
+            
+        except Exception as e:
+            logger.error(f"Phi text generation failed: {str(e)}")
+            raise RuntimeError(f"Text generation failed: {str(e)}")
+    
+    def __str__(self):
+        return f"PhiModel({self.model_name})"
+    
+    def __del__(self):
+        # Clean up GPU memory when object is destroyed
+        if hasattr(self, 'model'):
+            del self.model
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
 # Global model instances
 smollm_generator = None
 deepseek_generator = None
 nemotron_generator = None
 jamba_generator = None
+phi_generator = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Load models on startup and clean up on shutdown"""
-    global smollm_generator, deepseek_generator, nemotron_generator, jamba_generator
+    global smollm_generator, deepseek_generator, nemotron_generator, jamba_generator, phi_generator
     
     logger.info("Starting SLM API server...")
     
-    # Only load DeepSeek model - all other models disabled
+    # Only load Phi model - all other models disabled
     
     # SmolLM - DISABLED to save GPU memory
     smollm_generator = None
     logger.info("SmolLM model DISABLED to save GPU memory")
     
-    # DeepSeek - ENABLED (ONLY active model)
-    try:
-        logger.info("Loading DeepSeek model...")
-        deepseek_generator = DeepSeekModel()
-        logger.info("DeepSeek model loaded successfully!")
-    except Exception as e:
-        logger.error(f"Failed to load DeepSeek model: {e}")
-        deepseek_generator = None
+    # DeepSeek - DISABLED to save GPU memory
+    deepseek_generator = None
+    logger.info("DeepSeek model DISABLED to save GPU memory")
     
     # Nemotron - DISABLED to save GPU memory
     nemotron_generator = None
     logger.info("Nemotron model DISABLED to save GPU memory")
     
-    # Jamba - DISABLED to save GPU memory (DeepSeek only mode)
+    # Jamba - DISABLED to save GPU memory
     jamba_generator = None
     logger.info("Jamba model DISABLED to save GPU memory")
     
-    if deepseek_generator is None:
-        logger.error("Failed to load DeepSeek model!")
-        raise RuntimeError("DeepSeek model could not be loaded")
+    # Phi - ENABLED (ONLY active model)
+    try:
+        logger.info("Loading Phi model...")
+        phi_generator = PhiModel()
+        logger.info("Phi model loaded successfully!")
+    except Exception as e:
+        logger.error(f"Failed to load Phi model: {e}")
+        phi_generator = None
     
-    logger.info("SLM API server ready with DeepSeek model!")
+    if phi_generator is None:
+        logger.error("Failed to load Phi model!")
+        raise RuntimeError("Phi model could not be loaded")
+    
+    logger.info("SLM API server ready with Phi model!")
     yield
     
     # Cleanup
@@ -602,7 +746,7 @@ async def lifespan(app: FastAPI):
 # Initialize the FastAPI app with lifespan
 app = FastAPI(
     title="SLM API for CVDP Benchmark",
-    description="Small Language Model API server with DeepSeek-R1-Distill-Qwen-7B model",
+    description="Small Language Model API server with Microsoft Phi-3.5-mini-instruct model",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -612,7 +756,7 @@ class PromptRequest(BaseModel):
     prompt: str = Field(..., description="The input prompt for text generation")
     max_length: Optional[int] = Field(default=None, ge=1, le=32768, description="Maximum length of generated text - 10x enhanced")
     max_tokens: Optional[int] = Field(default=None, ge=1, le=32768, description="Maximum tokens to generate (alias for max_length) - 10x enhanced")
-    model: Optional[str] = Field(default="deepseek", description="Model to use: 'deepseek' (primary/only active), 'jamba' (disabled), 'nemotron' (disabled), or 'smollm' (disabled)")
+    model: Optional[str] = Field(default="phi35", description="Model to use: 'phi35' (primary/only active), 'deepseek' (disabled), 'jamba' (disabled), 'nemotron' (disabled), or 'smollm' (disabled)")
     temperature: Optional[float] = Field(default=0.7, ge=0.0, le=2.0, description="Sampling temperature")
     top_p: Optional[float] = Field(default=0.9, ge=0.0, le=1.0, description="Top-p sampling parameter")
     
@@ -673,6 +817,14 @@ def read_root():
             "status": "available"
         })
     
+    if phi_generator:
+        models.append({
+            "name": phi_generator.model_name,
+            "type": "Microsoft-Phi-3.5-mini-instruct",
+            "device": phi_generator.device,
+            "status": "available"
+        })
+    
     return {
         "status": "SLM API is running",
         "version": "1.0.0",
@@ -684,7 +836,6 @@ def read_root():
 def get_model_info():
     """Get detailed model information"""
     info = {}
-    
     if smollm_generator:
         info["smollm"] = {
             "model_name": smollm_generator.model_name,
@@ -727,6 +878,16 @@ def get_model_info():
     else:
         info["jamba"] = {"status": "unavailable", "error": "Model disabled or failed to load"}
     
+    if phi_generator:
+        info["phi35"] = {
+            "model_name": phi_generator.model_name,
+            "device": phi_generator.device,
+            "model_type": "Microsoft-Phi-3.5-mini-instruct",
+            "status": "available"
+        }
+    else:
+        info["phi35"] = {"status": "unavailable", "error": "Model disabled or failed to load"}
+    
     return info
 
 @app.get("/health")
@@ -741,6 +902,8 @@ def health_check():
         available_models.append("nemotron")
     if jamba_generator:
         available_models.append("jamba")
+    if phi_generator:
+        available_models.append("phi35")
     
     return {
         "status": "healthy" if available_models else "unhealthy",
@@ -770,7 +933,14 @@ def generate_text(request: PromptRequest):
     
     try:
         # Validate model availability
-        if request.model == "deepseek":
+        if request.model == "phi35":
+            if phi_generator is None:
+                raise HTTPException(
+                    status_code=503,
+                    detail="Phi model is not available"
+                )
+            generator = phi_generator
+        elif request.model == "deepseek":
             if deepseek_generator is None:
                 raise HTTPException(
                     status_code=503,
@@ -801,7 +971,7 @@ def generate_text(request: PromptRequest):
         else:
             raise HTTPException(
                 status_code=400,
-                detail=f"Unsupported model: {request.model}. Use 'deepseek' (only active model currently)"
+                detail=f"Unsupported model: {request.model}. Use 'phi35' (only active model currently)"
             )
         
         # Validate prompt
