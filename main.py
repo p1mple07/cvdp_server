@@ -8,6 +8,13 @@ import time
 import traceback
 from contextlib import asynccontextmanager
 from nemotron_model import NemotronModel
+import os
+
+# Disable Triton and force PyTorch to use compatible kernels
+os.environ['DISABLE_ADDMM_CUDA_LT'] = '1'
+os.environ['TORCH_CUDA_ARCH_LIST'] = '8.0'  # Force sm_80 architecture
+os.environ['CUDA_LAUNCH_BLOCKING'] = '1'  # For debugging
+os.environ['TRITON_DISABLE_LINE_INFO'] = '1'  # Disable Triton line info
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -406,6 +413,499 @@ class JambaModel:
         if torch.cuda.is_available():
             torch.cuda.empty_cache()
 
+class GPTOSSModel:
+    """OpenAI GPT-OSS-20B model implementation"""
+    def __init__(self, model: str = "openai/gpt-oss-20b"):
+        self.model_name = model
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        logger.info(f"Using device: {self.device}")
+        logger.info(f"Loading {model}...")
+        
+        # Check GPU memory if available
+        if torch.cuda.is_available():
+            gpu_memory_gb = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+            logger.info(f"GPU memory available: {gpu_memory_gb:.1f} GB")
+            if gpu_memory_gb < 40:
+                logger.warning(f"GPT-OSS-20B may require significant GPU memory. Available: {gpu_memory_gb:.1f} GB")
+        
+        try:
+            # Load tokenizer
+            self.tokenizer = AutoTokenizer.from_pretrained(model, trust_remote_code=True)
+            
+            # Set padding token properly
+            if self.tokenizer.pad_token is None:
+                self.tokenizer.pad_token = self.tokenizer.eos_token
+            
+            # Load model with optimized settings - avoid advanced quantization
+            if torch.cuda.is_available():
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model,
+                    torch_dtype=torch.bfloat16,  # Use bfloat16 to avoid FP8 quantization
+                    device_map="auto",
+                    trust_remote_code=True,
+                    low_cpu_mem_usage=True,
+                    # Disable advanced features that require newer GPU
+                    attn_implementation="eager",  # Use eager attention instead of flash
+                    use_cache=True
+                )
+                logger.info(f"GPT-OSS model loaded successfully on GPU with eager attention and BF16")
+            else:
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model,
+                    trust_remote_code=True,
+                    torch_dtype=torch.float32
+                ).to(self.device)
+                logger.info(f"GPT-OSS model loaded successfully on CPU")
+            
+            # Set model to eval mode
+            self.model.eval()
+            
+            logger.info(f"GPT-OSS model loaded successfully on {self.device}")
+            logger.info(f"Model vocab size: {self.model.config.vocab_size}")
+            logger.info(f"Model context length: 8192 tokens")
+            
+        except Exception as e:
+            logger.error(f"Failed to load GPT-OSS model: {e}")
+            raise
+
+    def generate_text(self, prompt: str, max_length: int = 1000, temperature: float = 0.7, top_p: float = 0.9) -> str:
+        """
+        Generate response using GPT-OSS model
+        """
+        try:
+            start_time = time.time()
+            
+            # Tokenize input
+            inputs = self.tokenizer(
+                prompt, 
+                return_tensors="pt", 
+                padding=True, 
+                truncation=True, 
+                max_length=8192  # GPT-OSS context length
+            )
+            
+            # Move inputs to device
+            if hasattr(self.model, 'device'):
+                inputs = {k: v.to(self.model.device) for k, v in inputs.items()}
+            else:
+                inputs = {k: v.to(self.device) for k, v in inputs.items()}
+            
+            input_length = inputs['input_ids'].shape[1]
+            
+            # Calculate max_new_tokens - respect user's max_length parameter
+            # max_length is the desired output length, so max_new_tokens should be max_length
+            max_new_tokens = min(max_length, 8192 - input_length)
+            
+            logger.info(f"Input length: {input_length}, Requested max_length: {max_length}, Calculated max_new_tokens: {max_new_tokens}")
+            
+            if max_new_tokens <= 0:
+                logger.warning(f"Input too long. Input length: {input_length}, Max length: {max_length}")
+                return "Input prompt too long for generation."
+            
+            # Generate response
+            with torch.no_grad():
+                generation_kwargs = {
+                    'input_ids': inputs['input_ids'],
+                    'attention_mask': inputs['attention_mask'],
+                    'max_new_tokens': max_new_tokens,
+                    'pad_token_id': self.tokenizer.eos_token_id,
+                    'eos_token_id': self.tokenizer.eos_token_id,
+                    'repetition_penalty': 1.1,
+                    'use_cache': False  # Disable cache to avoid CUDA kernel issues
+                }
+                
+                # Add sampling parameters if temperature > 0
+                if temperature > 0:
+                    generation_kwargs.update({
+                        'do_sample': True,
+                        'temperature': max(temperature, 0.1),
+                        'top_p': top_p,
+                        'top_k': 50
+                    })
+                else:
+                    generation_kwargs['do_sample'] = False
+                
+                outputs = self.model.generate(**generation_kwargs)
+            
+            # Decode only new tokens
+            response_tokens = outputs[0][input_length:]
+            response = self.tokenizer.decode(response_tokens, skip_special_tokens=True).strip()
+            
+            # Clean up response
+            response = self._clean_response(response)
+            
+            generation_time = time.time() - start_time
+            logger.info(f"GPT-OSS generated {len(response_tokens)} tokens in {generation_time:.2f}s")
+            
+            return response if response else "Unable to generate response."
+            
+        except Exception as e:
+            logger.error(f"GPT-OSS text generation failed: {str(e)}")
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            raise RuntimeError(f"Text generation failed: {str(e)}")
+    
+    def _clean_response(self, response: str) -> str:
+        """Clean up common generation artifacts"""
+        # Remove common artifacts
+        response = response.replace("</think>", "").replace("<think>", "")
+        response = response.replace("<|im_start|>", "").replace("<|im_end|>", "")
+        
+        # Remove markdown code blocks if present
+        if "```" in response:
+            import re
+            code_blocks = re.findall(r'```(?:\w+)?\n?(.*?)```', response, re.DOTALL)
+            if code_blocks:
+                response = code_blocks[0].strip()
+            else:
+                response = response.replace("```", "").strip()
+        
+        return response.strip()
+    
+    def __str__(self):
+        return f"GPTOSSModel({self.model_name})"
+    
+    def __del__(self):
+        # Clean up GPU memory when object is destroyed
+        if hasattr(self, 'model'):
+            del self.model
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+class DeepSeekModel:
+    """AI21 Jamba Reasoning 3B model implementation - Hybrid Transformer-Mamba architecture"""
+    def __init__(self, model: str = "ai21labs/AI21-Jamba-Reasoning-3B"):
+        self.model_name = model
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        logger.info(f"Using device: {self.device}")
+        logger.info(f"Loading {model}...")
+        
+        try:
+            # Load tokenizer with fallback for format issues
+            try:
+                self.tokenizer = AutoTokenizer.from_pretrained(
+                    model, 
+                    trust_remote_code=True,
+                    use_fast=False  # Use slow tokenizer to avoid format issues
+                )
+            except Exception as e:
+                logger.warning(f"Failed with slow tokenizer, trying fast tokenizer: {e}")
+                self.tokenizer = AutoTokenizer.from_pretrained(
+                    model, 
+                    trust_remote_code=True,
+                    use_fast=True
+                )
+            
+            # Set padding token properly
+            if self.tokenizer.pad_token is None:
+                self.tokenizer.pad_token = self.tokenizer.eos_token
+            
+            # Load model with optimized settings for Jamba
+            if torch.cuda.is_available():
+                # Load config and disable fast Mamba kernels (use naive implementation)
+                from transformers import AutoConfig
+                config = AutoConfig.from_pretrained(model, trust_remote_code=True)
+                config.use_mamba_kernels = False  # Use naive implementation to avoid kernel requirements
+                
+                # Use bfloat16 as recommended for Jamba
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model,
+                    config=config,
+                    torch_dtype=torch.bfloat16,
+                    device_map="auto",
+                    trust_remote_code=True,
+                    low_cpu_mem_usage=True
+                )
+                logger.info("Jamba model loaded with naive Mamba implementation (no fast kernels required)")
+            else:
+                from transformers import AutoConfig
+                config = AutoConfig.from_pretrained(model, trust_remote_code=True)
+                config.use_mamba_kernels = False
+                
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model,
+                    config=config,
+                    trust_remote_code=True,
+                    low_cpu_mem_usage=True
+                ).to(self.device)
+            
+            # Set model to eval mode
+            self.model.eval()
+            
+            logger.info(f"Jamba model loaded successfully on {self.device}")
+            logger.info(f"Model vocab size: {self.model.config.vocab_size}")
+            logger.info(f"Model supports context length: 256k tokens")
+            
+        except Exception as e:
+            logger.error(f"Failed to load Jamba model: {e}")
+            raise
+
+    def generate_text(self, prompt: str, max_length: int = 1000, temperature: float = 0.7, top_p: float = 0.9) -> str:
+        """
+        Generate response using AI21 Jamba Reasoning 3B model
+        """
+        try:
+            start_time = time.time()
+            
+            # Format prompt using chat template
+            messages = [
+                {"role": "user", "content": prompt}
+            ]
+            
+            # Apply chat template if available
+            try:
+                formatted_prompt = self.tokenizer.apply_chat_template(
+                    messages, 
+                    add_generation_prompt=True, 
+                    tokenize=False
+                )
+            except Exception as e:
+                logger.warning(f"Chat template not available, using direct prompt: {e}")
+                formatted_prompt = prompt
+            
+            # Tokenize with proper settings for long context support
+            inputs = self.tokenizer(
+                formatted_prompt, 
+                return_tensors="pt", 
+                padding=True, 
+                truncation=True, 
+                max_length=8192  # Use reasonable context window
+            ).to(self.device)
+            
+            input_length = inputs['input_ids'].shape[1]
+            
+            # Calculate max_new_tokens - Jamba can handle very long outputs
+            max_new_tokens = min(max(200, max_length - input_length), 4096)
+            
+            if max_new_tokens <= 0:
+                logger.warning(f"Input too long, no room for generation. Input length: {input_length}")
+                return "Input prompt too long for generation."
+            
+            # Generate with optimized parameters for Jamba
+            with torch.no_grad():
+                generation_kwargs = {
+                    'input_ids': inputs['input_ids'],
+                    'attention_mask': inputs['attention_mask'],
+                    'max_new_tokens': max_new_tokens,
+                    'pad_token_id': self.tokenizer.eos_token_id,
+                    'eos_token_id': self.tokenizer.eos_token_id,
+                    'repetition_penalty': 1.1,
+                    'use_cache': True
+                }
+                
+                # Add sampling parameters if temperature > 0
+                if temperature > 0:
+                    generation_kwargs.update({
+                        'do_sample': True,
+                        'temperature': max(temperature, 0.1),
+                        'top_p': top_p,
+                        'top_k': 50
+                    })
+                else:
+                    generation_kwargs['do_sample'] = False
+                
+                outputs = self.model.generate(**generation_kwargs)
+            
+            # Decode only new tokens
+            response_tokens = outputs[0][input_length:]
+            response = self.tokenizer.decode(response_tokens, skip_special_tokens=True).strip()
+            
+            # Clean up response
+            response = self._clean_response(response)
+            
+            generation_time = time.time() - start_time
+            logger.info(f"Jamba generated {len(response_tokens)} tokens in {generation_time:.2f}s")
+            
+            return response if response else "Unable to generate response."
+            
+        except Exception as e:
+            logger.error(f"Error generating Jamba response: {e}")
+            # Clean up GPU memory on error
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            raise RuntimeError(f"Text generation failed: {str(e)}")
+    
+    def _clean_response(self, response: str) -> str:
+        """Clean up common generation artifacts"""
+        # Remove thinking tags and common artifacts
+        response = response.replace("</think>", "").replace("<think>", "")
+        response = response.replace("<|im_start|>", "").replace("<|im_end|>", "")
+        response = response.replace("<|assistant|>", "").replace("<|user|>", "")
+        
+        # Remove incomplete sentences at the end
+        if '. ' in response:
+            sentences = response.split('. ')
+            if len(sentences) > 1 and len(sentences[-1].strip()) < 15:
+                response = '. '.join(sentences[:-1]) + '.'
+        
+        return response.strip()
+    
+    def __str__(self):
+        return f"JambaModel({self.model_name})"
+    
+    def __del__(self):
+        # Clean up GPU memory when object is destroyed
+        if hasattr(self, 'model'):
+            del self.model
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
+class PhiModel:
+    """Microsoft Phi-3-mini-128k-instruct model implementation"""
+    def __init__(self, model: str = "microsoft/Phi-3-mini-128k-instruct"):
+        self.model_name = model
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        logger.info(f"Using device: {self.device}")
+        logger.info(f"Loading {model}...")
+        
+        try:
+            # Load tokenizer
+            self.tokenizer = AutoTokenizer.from_pretrained(
+                model, 
+                trust_remote_code=True
+            )
+            
+            # Set padding token properly
+            if self.tokenizer.pad_token is None:
+                self.tokenizer.pad_token = self.tokenizer.eos_token
+            
+            # Load model with optimized settings
+            if torch.cuda.is_available():
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model,
+                    torch_dtype=torch.float16,
+                    device_map="auto",
+                    trust_remote_code=True,
+                    low_cpu_mem_usage=True,
+                    attn_implementation="eager"  # Use eager attention (flash_attn not required)
+                )
+            else:
+                self.model = AutoModelForCausalLM.from_pretrained(
+                    model,
+                    trust_remote_code=True,
+                    low_cpu_mem_usage=True
+                ).to(self.device)
+            
+            # Set model to eval mode
+            self.model.eval()
+            
+            logger.info(f"Phi model loaded successfully on {self.device}")
+            logger.info(f"Model vocab size: {self.model.config.vocab_size}")
+            logger.info(f"Model context length: 128K tokens (131,072 tokens)")
+            
+        except Exception as e:
+            logger.error(f"Failed to load Phi model: {e}")
+            raise
+
+    def generate_text(self, prompt: str, max_length: int = 100, temperature: float = 0.7, top_p: float = 0.9) -> str:
+        """
+        Generate response using Microsoft Phi-3 model
+        """
+        try:
+            start_time = time.time()
+            
+            # Format prompt using chat template
+            messages = [
+                {"role": "user", "content": prompt}
+            ]
+            
+            # Apply chat template if available
+            try:
+                formatted_prompt = self.tokenizer.apply_chat_template(
+                    messages, 
+                    add_generation_prompt=True, 
+                    tokenize=False
+                )
+            except Exception as e:
+                logger.warning(f"Chat template not available, using direct prompt: {e}")
+                formatted_prompt = prompt
+            
+            # Tokenize with proper settings
+            inputs = self.tokenizer(
+                formatted_prompt, 
+                return_tensors="pt", 
+                padding=True, 
+                truncation=True, 
+                max_length=131072  # Phi-3-mini-128k context length
+            ).to(self.device)
+            
+            input_length = inputs['input_ids'].shape[1]
+            
+            # Calculate max_new_tokens
+            max_new_tokens = min(max(200, max_length - input_length), 131072)
+            
+            if max_new_tokens <= 0:
+                logger.warning(f"Input too long, no room for generation. Input length: {input_length}")
+                return "Input prompt too long for generation."
+            
+            # Generate with optimized parameters
+            with torch.no_grad():
+                generation_kwargs = {
+                    'input_ids': inputs['input_ids'],
+                    'attention_mask': inputs['attention_mask'],
+                    'max_new_tokens': max_new_tokens,
+                    'pad_token_id': self.tokenizer.eos_token_id,
+                    'eos_token_id': self.tokenizer.eos_token_id,
+                    'repetition_penalty': 1.1,
+                    'use_cache': False  # Disable cache to avoid compatibility issues
+                }
+                
+                # Add sampling parameters if temperature > 0
+                if temperature > 0:
+                    generation_kwargs.update({
+                        'do_sample': True,
+                        'temperature': max(temperature, 0.1),
+                        'top_p': top_p,
+                        'top_k': 50
+                    })
+                else:
+                    generation_kwargs['do_sample'] = False
+                
+                outputs = self.model.generate(**generation_kwargs)
+            
+            # Decode only new tokens
+            response_tokens = outputs[0][input_length:]
+            response = self.tokenizer.decode(response_tokens, skip_special_tokens=True).strip()
+            
+            # Clean up response
+            response = self._clean_response(response)
+            
+            generation_time = time.time() - start_time
+            logger.info(f"Phi generated {len(response_tokens)} tokens in {generation_time:.2f}s")
+            
+            return response if response else "Unable to generate response."
+            
+        except Exception as e:
+            logger.error(f"Error generating Phi response: {e}")
+            if torch.cuda.is_available():
+                torch.cuda.empty_cache()
+            raise RuntimeError(f"Text generation failed: {str(e)}")
+    
+    def _clean_response(self, response: str) -> str:
+        """Clean up common generation artifacts"""
+        # Remove thinking tags and common artifacts
+        response = response.replace("</think>", "").replace("<think>", "")
+        response = response.replace("<|im_start|>", "").replace("<|im_end|>", "")
+        response = response.replace("<|assistant|>", "").replace("<|user|>", "")
+        
+        # Remove incomplete sentences at the end
+        if '. ' in response:
+            sentences = response.split('. ')
+            if len(sentences) > 1 and len(sentences[-1].strip()) < 15:
+                response = '. '.join(sentences[:-1]) + '.'
+        
+        return response.strip()
+    
+    def __str__(self):
+        return f"PhiModel({self.model_name})"
+    
+    def __del__(self):
+        # Clean up GPU memory when object is destroyed
+        if hasattr(self, 'model'):
+            del self.model
+        if torch.cuda.is_available():
+            torch.cuda.empty_cache()
+
 class DeepSeekModel:
     """DeepSeek-R1-Distill-Qwen-7B model implementation for CVDP benchmark"""
     def __init__(self, model: str = "deepseek-ai/DeepSeek-R1-Distill-Qwen-7B"):
@@ -461,28 +961,13 @@ class DeepSeekModel:
 
     def generate_text(self, prompt: str, max_length: int = 100, temperature: float = 0.7, top_p: float = 0.9) -> str:
         """
-        Generate response using DeepSeek model - keeps original prompt unchanged
+        Generate response using DeepSeek model - optimized for speed
         """
         try:
             start_time = time.time()
             
-            # Add code-only instruction to prompt
-            prompt = f"{prompt}\n\nIMPORTANT: Provide ONLY the code without any explanations, markdown formatting, or additional text."
-            
-            # Use chat template if available
-            try:
-                messages = [{"role": "user", "content": prompt}]
-                formatted_prompt = self.tokenizer.apply_chat_template(
-                    messages, 
-                    tokenize=False, 
-                    add_generation_prompt=True
-                )
-                inputs = self.tokenizer(formatted_prompt, return_tensors="pt", padding=True)
-                logger.info("Using chat template for DeepSeek")
-            except:
-                # Fallback to direct tokenization if chat template not available
-                inputs = self.tokenizer(prompt, return_tensors="pt", padding=True)
-                logger.info("Using direct tokenization for DeepSeek")
+            # Direct tokenization (faster than chat template)
+            inputs = self.tokenizer(prompt, return_tensors="pt", padding=True, truncation=True, max_length=32768)
             
             # Move inputs to device
             if hasattr(self.model, 'device'):
@@ -492,50 +977,49 @@ class DeepSeekModel:
             
             input_length = inputs['input_ids'].shape[1]
             
-            # Calculate max_new_tokens - increased for longer code generation
-            max_new_tokens = min(max(500, max_length - input_length), 8192)  # Increased from 2000 to 8192
+            # Calculate max_new_tokens - respect user's request (FIXED: no minimum forced)
+            max_new_tokens = min(max_length, 32768 - input_length)
+            
+            logger.info(f"DeepSeek: Input length: {input_length}, Max new tokens: {max_new_tokens}")
             
             if max_new_tokens <= 0:
                 logger.warning(f"Input too long. Input length: {input_length}, Max length: {max_length}")
                 return "Input prompt too long for generation."
             
-            # Generate response
+            # Generate response with optimized parameters
             with torch.no_grad():
-                outputs = self.model.generate(
-                    inputs['input_ids'],
-                    attention_mask=inputs['attention_mask'],
-                    max_new_tokens=max_new_tokens,
-                    temperature=temperature,
-                    top_p=top_p,
-                    do_sample=temperature > 0,
-                    pad_token_id=self.tokenizer.pad_token_id,
-                    eos_token_id=self.tokenizer.eos_token_id
-                )
+                generation_kwargs = {
+                    'input_ids': inputs['input_ids'],
+                    'attention_mask': inputs['attention_mask'],
+                    'max_new_tokens': max_new_tokens,
+                    'pad_token_id': self.tokenizer.pad_token_id,
+                    'eos_token_id': self.tokenizer.eos_token_id,
+                    'use_cache': True,  # Enable KV cache for faster generation
+                    'repetition_penalty': 1.1
+                }
+                
+                # Add sampling only if temperature > 0
+                if temperature > 0:
+                    generation_kwargs.update({
+                        'do_sample': True,
+                        'temperature': temperature,
+                        'top_p': top_p,
+                        'top_k': 50
+                    })
+                else:
+                    generation_kwargs['do_sample'] = False
+                
+                outputs = self.model.generate(**generation_kwargs)
             
             # Decode only new tokens
             response_tokens = outputs[0][input_length:]
             response = self.tokenizer.decode(response_tokens, skip_special_tokens=True).strip()
             
-            # Clean up response - remove common artifacts
-            if response.startswith("assistant"):
-                response = response[len("assistant"):].strip()
-            
+            # Minimal cleanup
             response = response.replace("</think>", "").replace("<think>", "")
-            response = response.replace("<|im_start|>", "").replace("<|im_end|>", "")
-            
-            # Remove markdown code blocks if present
-            if "```" in response:
-                # Extract code from markdown blocks
-                import re
-                code_blocks = re.findall(r'```(?:\w+)?\n?(.*?)```', response, re.DOTALL)
-                if code_blocks:
-                    response = code_blocks[0].strip()
-                else:
-                    # Remove the backticks if pattern didn't match
-                    response = response.replace("```", "").strip()
             
             generation_time = time.time() - start_time
-            logger.info(f"DeepSeek generation completed in {generation_time:.2f}s, generated {len(response_tokens)} tokens")
+            logger.info(f"DeepSeek generated {len(response_tokens)} tokens in {generation_time:.2f}s")
             
             return response if response else "Unable to generate response."
             
@@ -558,20 +1042,22 @@ smollm_generator = None
 deepseek_generator = None
 nemotron_generator = None
 jamba_generator = None
+phi_generator = None
+gptoss_generator = None
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Load models on startup and clean up on shutdown"""
-    global smollm_generator, deepseek_generator, nemotron_generator, jamba_generator
+    global smollm_generator, deepseek_generator, nemotron_generator, jamba_generator, phi_generator, gptoss_generator
     
     logger.info("Starting SLM API server...")
     
     # Only load DeepSeek model - all other models disabled
-    
+
     # SmolLM - DISABLED to save GPU memory
     smollm_generator = None
     logger.info("SmolLM model DISABLED to save GPU memory")
-    
+
     # DeepSeek - ENABLED (ONLY active model)
     try:
         logger.info("Loading DeepSeek model...")
@@ -580,29 +1066,43 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.error(f"Failed to load DeepSeek model: {e}")
         deepseek_generator = None
-    
+
     # Nemotron - DISABLED to save GPU memory
     nemotron_generator = None
     logger.info("Nemotron model DISABLED to save GPU memory")
-    
-    # Jamba - DISABLED to save GPU memory (DeepSeek only mode)
+
+    # Jamba - DISABLED to save GPU memory
     jamba_generator = None
     logger.info("Jamba model DISABLED to save GPU memory")
-    
+
+    # Phi - DISABLED to save GPU memory
+    phi_generator = None
+    logger.info("Phi model DISABLED to save GPU memory")
+
+    # GPT-OSS - DISABLED to save GPU memory
+    gptoss_generator = None
+    logger.info("GPT-OSS model DISABLED to save GPU memory")
+
     if deepseek_generator is None:
         logger.error("Failed to load DeepSeek model!")
         raise RuntimeError("DeepSeek model could not be loaded")
-    
-    logger.info("SLM API server ready with DeepSeek model!")
+
+    logger.info("SLM API server ready with DeepSeek model only!")
     yield
-    
+
     # Cleanup
     logger.info("Shutting down SLM API server...")
+
+
+
+
+
+
 
 # Initialize the FastAPI app with lifespan
 app = FastAPI(
     title="SLM API for CVDP Benchmark",
-    description="Small Language Model API server with DeepSeek-R1-Distill-Qwen-7B model",
+    description="Small Language Model API server with OpenAI GPT-OSS-20B model (8K context)",
     version="1.0.0",
     lifespan=lifespan
 )
@@ -610,9 +1110,9 @@ app = FastAPI(
 # Define the request data structure using Pydantic
 class PromptRequest(BaseModel):
     prompt: str = Field(..., description="The input prompt for text generation")
-    max_length: Optional[int] = Field(default=None, ge=1, le=32768, description="Maximum length of generated text - 10x enhanced")
-    max_tokens: Optional[int] = Field(default=None, ge=1, le=32768, description="Maximum tokens to generate (alias for max_length) - 10x enhanced")
-    model: Optional[str] = Field(default="deepseek", description="Model to use: 'deepseek' (primary/only active), 'jamba' (disabled), 'nemotron' (disabled), or 'smollm' (disabled)")
+    max_length: Optional[int] = Field(default=None, ge=1, le=8192, description="Maximum length of generated text (up to 8K tokens for GPT-OSS)")
+    max_tokens: Optional[int] = Field(default=None, ge=1, le=8192, description="Maximum tokens to generate (alias for max_length, up to 8K tokens for GPT-OSS)")
+    model: Optional[str] = Field(default="gptoss", description="Model to use: 'gptoss' (primary/only active), 'jamba' (disabled), 'smollm' (disabled), 'nemotron' (disabled), 'deepseek' (disabled), 'phi' (disabled)")
     temperature: Optional[float] = Field(default=0.7, ge=0.0, le=2.0, description="Sampling temperature")
     top_p: Optional[float] = Field(default=0.9, ge=0.0, le=1.0, description="Top-p sampling parameter")
     
@@ -673,6 +1173,22 @@ def read_root():
             "status": "available"
         })
     
+    if phi_generator:
+        models.append({
+            "name": phi_generator.model_name,
+            "type": "Microsoft-Phi-3-mini-128k-instruct",
+            "device": phi_generator.device,
+            "status": "available"
+        })
+    
+    if gptoss_generator:
+        models.append({
+            "name": gptoss_generator.model_name,
+            "type": "OpenAI-GPT-OSS-20B",
+            "device": gptoss_generator.device,
+            "status": "available"
+        })
+    
     return {
         "status": "SLM API is running",
         "version": "1.0.0",
@@ -727,6 +1243,28 @@ def get_model_info():
     else:
         info["jamba"] = {"status": "unavailable", "error": "Model disabled or failed to load"}
     
+    if phi_generator:
+        info["phi"] = {
+            "model_name": phi_generator.model_name,
+            "device": phi_generator.device,
+            "model_type": "Microsoft-Phi-3-mini-128k-instruct",
+            "status": "available",
+            "context_length": "128K tokens (131,072 tokens)"
+        }
+    else:
+        info["phi"] = {"status": "unavailable", "error": "Model disabled or failed to load"}
+    
+    if gptoss_generator:
+        info["gptoss"] = {
+            "model_name": gptoss_generator.model_name,
+            "device": gptoss_generator.device,
+            "model_type": "OpenAI-GPT-OSS-20B",
+            "status": "available",
+            "context_length": "8K tokens (8,192 tokens)"
+        }
+    else:
+        info["gptoss"] = {"status": "unavailable", "error": "Model disabled or failed to load"}
+    
     return info
 
 @app.get("/health")
@@ -741,6 +1279,10 @@ def health_check():
         available_models.append("nemotron")
     if jamba_generator:
         available_models.append("jamba")
+    if phi_generator:
+        available_models.append("phi")
+    if gptoss_generator:
+        available_models.append("gptoss")
     
     return {
         "status": "healthy" if available_models else "unhealthy",
@@ -758,9 +1300,9 @@ def generate_text(request: PromptRequest):
     Generate text using the specified model.
     
     - **prompt**: The input text prompt
-    - **max_length**: Maximum length of generated response (1-32768)
-    - **max_tokens**: Alternative parameter name for max_length (1-32768)
-    - **model**: Model to use ('smollm', 'deepseek', 'nemotron', or 'jamba')
+    - **max_length**: Maximum length of generated response (1-131072)
+    - **max_tokens**: Alternative parameter name for max_length (1-131072)
+    - **model**: Model to use ('nemotron', 'phi', 'deepseek', 'smollm', or 'jamba')
     - **temperature**: Sampling temperature (0.0-2.0)
     - **top_p**: Top-p sampling parameter (0.0-1.0)
     
@@ -770,7 +1312,21 @@ def generate_text(request: PromptRequest):
     
     try:
         # Validate model availability
-        if request.model == "deepseek":
+        if request.model == "gptoss":
+            if gptoss_generator is None:
+                raise HTTPException(
+                    status_code=503,
+                    detail="GPT-OSS model is not available"
+                )
+            generator = gptoss_generator
+        elif request.model == "phi":
+            if phi_generator is None:
+                raise HTTPException(
+                    status_code=503,
+                    detail="Phi model is not available"
+                )
+            generator = phi_generator
+        elif request.model == "deepseek":
             if deepseek_generator is None:
                 raise HTTPException(
                     status_code=503,
@@ -801,7 +1357,7 @@ def generate_text(request: PromptRequest):
         else:
             raise HTTPException(
                 status_code=400,
-                detail=f"Unsupported model: {request.model}. Use 'deepseek' (only active model currently)"
+                detail=f"Unsupported model: {request.model}. Use 'gptoss' (only active model currently)"
             )
         
         # Validate prompt

@@ -1,5 +1,4 @@
-nohup: ignoring input
-INFO:     Started server process [193457]
+INFO:     Started server process [194463]
 INFO:     Waiting for application startup.
 INFO:main:Starting SLM API server...
 INFO:main:SmolLM model DISABLED to save GPU memory
@@ -13,12 +12,14 @@ INFO:main:Loading microsoft/Phi-3-mini-128k-instruct...
 WARNING:transformers_modules.microsoft.Phi_hyphen_3_hyphen_mini_hyphen_128k_hyphen_instruct.072cb7562cb8c4adf682a8e186aaafa49469eb5d.modeling_phi3:`flash-attention` package not found, consider installing for better performance: No module named 'flash_attn'.
 WARNING:transformers_modules.microsoft.Phi_hyphen_3_hyphen_mini_hyphen_128k_hyphen_instruct.072cb7562cb8c4adf682a8e186aaafa49469eb5d.modeling_phi3:Current `flash-attention` does not support `window_size`. Either upgrade or use `attn_implementation='eager'`.
 INFO:accelerate.utils.modeling:We will use 90% of the memory on device 0 for storing the model, and 10% for the buffer to avoid OOM. You can set `max_memory` in to a higher value to use more memory (at your own risk).
-Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.36s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.01s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:02<00:00,  1.06s/it]
+Loading checkpoint shards:   0%|          | 0/2 [00:00<?, ?it/s]Loading checkpoint shards:  50%|█████     | 1/2 [00:01<00:01,  1.21s/it]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.19it/s]Loading checkpoint shards: 100%|██████████| 2/2 [00:01<00:00,  1.12it/s]
 INFO:main:Phi model loaded successfully on cuda
 INFO:main:Model vocab size: 32064
 INFO:main:Model context length: 128K tokens (131,072 tokens)
 INFO:main:Phi model loaded successfully!
 INFO:main:SLM API server ready with Phi model only!
 INFO:     Application startup complete.
-INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-INFO:     127.0.0.1:44404 - "GET /health HTTP/1.1" 200 OK
+ERROR:    [Errno 98] error while attempting to bind on address ('0.0.0.0', 8000): address already in use
+INFO:     Waiting for application shutdown.
+INFO:main:Shutting down SLM API server...
+INFO:     Application shutdown complete.
