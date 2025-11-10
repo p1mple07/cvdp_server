@@ -52,8 +52,7 @@ class NemotronModel:
                     load_in_8bit=False,  # Disable quantization to avoid cutlass kernel issues
                     load_in_4bit=False,
                     device_map=None,  # Load on single device to avoid multi-GPU issues
-                    low_cpu_mem_usage=True,
-                    use_flash_attention_2=False  # Disable flash attention for P100 compatibility
+                    low_cpu_mem_usage=True
                 ).to(self.device)
             else:
                 # For CPU (not recommended for large Nemotron models)
@@ -75,6 +74,8 @@ class NemotronModel:
         # Set model to eval mode
         self.model.eval()
         logger.info(f"Nemotron model loaded successfully on {self.device}")
+        logger.info(f"Context window: 4096 tokens (input + output combined)")
+        logger.info(f"Maximum output tokens: 4096 tokens")
     
     def generate_text(self, prompt: str, max_length: int = 1000, temperature: float = 0.7, top_p: float = 0.9) -> str:
         """
@@ -98,12 +99,12 @@ class NemotronModel:
                 # Fallback formatting for Nemotron
                 formatted_prompt = f"<|system|>\nYou are a helpful AI assistant specialized in code generation and technical tasks.\n<|user|>\n{prompt}\n<|assistant|>\n"
 
-            # Tokenize
+            # Tokenize with maximum context length for Nemotron (4K tokens)
             inputs = self.tokenizer(formatted_prompt, return_tensors="pt", padding=True, truncation=True, max_length=4096).to(self.device)
             input_length = inputs['input_ids'].shape[1]
             
-            # Calculate max_new_tokens
-            max_new_tokens = min(max(100, max_length - input_length), 2048)
+            # Calculate max_new_tokens - Nemotron supports up to 4K total context
+            max_new_tokens = min(max(100, max_length - input_length), 4096)
 
             # Generate response with parameters optimized for Nemotron
             with torch.no_grad():
